@@ -1,0 +1,23 @@
+@import '/src/styles/colors.scss';
+
+.card_mini_heading {
+    color: $resource-card-job-title;
+
+    /* Text sm/Medium */
+    font-family: Inter;
+    font-size: 0.87rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+    /* 142.857% */
+}
+
+
+.card_desc {
+    font-family: Inter;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 2rem;
+    /* 133.333% */
+}

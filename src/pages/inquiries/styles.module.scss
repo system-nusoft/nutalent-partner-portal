@@ -1,0 +1,180 @@
+@import '/src/styles/colors.scss';
+
+.main_container {
+    height: 77vh;
+
+
+
+    .card {
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        background: $white;
+        height: 100%;
+
+        .notFoundText {
+            color: $card-label;
+            text-align: center;
+            font-feature-settings: 'liga' off, 'clig' off;
+
+            /* Body/Info */
+            font-family: Inter;
+            font-size: 0.688rem;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1rem;
+            /* 145.455% */
+        }
+
+        .notFoundImg {
+            width: 5.375rem;
+            height: 5.375rem;
+            margin-bottom: 1rem;
+            border-radius: 100%;
+            mix-blend-mode: multiply;
+        }
+    }
+
+    .notification_dot {
+        height: 0.5rem;
+        width: 0.5rem;
+        background: red;
+        border-radius: 100%;
+    }
+
+    .selected_chat {
+        background: $slate;
+
+        .chat_text {
+            color: $text-color;
+            font-feature-settings: 'liga' off, 'clig' off;
+            font-family: Inter;
+            font-size: 0.75rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 0.875rem;
+        }
+
+        .chat_text_fname {
+            color: $text-color;
+            font-feature-settings: 'liga' off, 'clig' off;
+            font-family: Inter;
+            font-size: 0.78rem;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 0.875rem;
+        }
+    }
+
+    .chat_text_fname {
+        color: $text-color;
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-family: Inter;
+        font-size: 0.78rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 0.875rem;
+    }
+
+    .chat_text {
+        color: $text-color;
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-family: Inter;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 0.875rem;
+    }
+
+
+
+
+    .message_sent_div {
+        background: $chat-bg-sent;
+        min-width: 8rem;
+        padding: 0.5rem;
+
+
+
+        .message {
+            color: $text-color;
+
+            /* Body/Large 14 */
+            font-family: Inter;
+            font-size: 0.875rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.125rem;
+            /* 128.571% */
+            letter-spacing: -0.06px;
+        }
+
+
+        .time {
+            color: $text-color;
+            font-feature-settings: 'liga' off, 'clig' off;
+
+            /* Body/Info */
+            font-family: Inter;
+            font-size: 0.688rem;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1rem;
+            text-align: end;
+            /* 145.455% */
+        }
+
+
+
+    }
+
+    .message_div {
+        background: $chat-bg;
+        min-width: 8rem;
+        padding: 0.5rem;
+
+        .user_name {
+            color: $text-color;
+
+            /* Body/Large Bold */
+            font-family: Inter;
+            font-size: 0.875rem;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 1.5rem;
+            /* 171.429% */
+            letter-spacing: -0.07px;
+        }
+
+        .message {
+            color: $text-disabled;
+
+            /* Body/Large 14 */
+            font-family: Inter;
+            font-size: 0.875rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.125rem;
+            /* 128.571% */
+            letter-spacing: -0.06px;
+        }
+
+
+
+        .time {
+            color: $text-disabled;
+            font-feature-settings: 'liga' off, 'clig' off;
+
+            /* Body/Info */
+            font-family: Inter;
+            font-size: 0.688rem;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 1rem;
+            text-align: end;
+            /* 145.455% */
+        }
+
+
+
+    }
+}

@@ -1,0 +1,76 @@
+@import "~bootstrap/scss/bootstrap";
+@import "/src/styles/colors.scss";
+
+.account_settings_container {
+  background: $white;
+  padding: 3.81rem 0 6.18rem 0;
+
+
+  .heading_profile_setup_div {
+    gap: 1rem;
+    height: min-content;
+    margin: auto;
+  }
+
+  .heading_profile_setup {
+    font-family: Inter;
+    font-size: 2.375rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 2.875rem;
+  }
+
+  .des_profile_setup {
+    color: $text-color;
+    text-align: center;
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+
+  .settings-inner-container {
+    padding: 2rem;
+    border-radius: 0.37rem;
+    border: 0.06rem solid $border;
+  }
+
+  .settings_col_div {
+    gap: 0.62rem;
+    position: relative;
+
+    .profile_image_card {
+      border-radius: 0.37rem;
+      background: $input-grey-background;
+      height: 10.7rem;
+      cursor: pointer;
+
+      .img {
+        height: 10.5rem;
+        object-fit: fill;
+        border-radius: 0.2rem;
+      }
+
+      .profile_upload_text {
+        color: rgba(0, 0, 0, 0.45);
+        text-align: center;
+        font-size: 0.87rem;
+        font-weight: 400;
+        line-height: 1.37rem;
+        text-align: center;
+      }
+    }
+
+    .profile_image_card_heading {
+      color: $text-color;
+      font-size: 0.87rem;
+      font-weight: 500;
+      line-height: 1.37rem;
+    }
+  }
+
+  .input_styles {
+    width: 22rem;
+  }
+}

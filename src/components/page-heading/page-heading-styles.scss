@@ -1,0 +1,24 @@
+@import "~bootstrap/scss/bootstrap";
+@import '/src/styles/colors.scss';
+
+.container {
+  padding: 0rem 1.5rem 0rem;
+  background: $white;
+  height: min-content;
+  margin-bottom: 3rem;
+  position: sticky;
+  top: 0;
+}
+
+.page-heading-div {
+  display: flex;
+  align-items: center;
+  padding: 0rem 0rem 2.92rem 0rem;
+  align-self: stretch;
+}
+
+.page-heading-style {
+  color: $text-color;
+  font-size: 1.25rem;
+  font-weight: 500;
+}

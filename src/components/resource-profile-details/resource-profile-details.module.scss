@@ -1,0 +1,35 @@
+@import "~bootstrap/scss/bootstrap";
+@import "../../styles/colors";
+
+.resource_profile_details_div {
+  width: 100%;
+  padding: 0rem 1.5rem 1.5rem 1.5rem;
+  gap: 1rem;
+  z-index: 0;
+
+
+
+  .resource_profile_details_container {
+    background: $white;
+    margin: 0rem 5rem;
+    gap: 2.5rem;
+    padding-bottom: 3rem;
+
+    .resource-profile-details-heading {
+      padding: 1rem 0rem;
+      align-self: stretch;
+    }
+
+    .resource-profile-details-text {
+      color: $text-color;
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1rem;
+    }
+  }
+}
+
+
+.desc {
+  font-size: 0.8rem;
+}

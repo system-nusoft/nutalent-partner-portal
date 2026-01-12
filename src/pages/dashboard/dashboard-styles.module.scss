@@ -1,0 +1,30 @@
+@import "~bootstrap/scss/bootstrap";
+@import '/src/styles/colors.scss';
+
+
+
+.notification_dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  background: red;
+  border-radius: 100%;
+}
+
+.custom_sider {
+  box-shadow: 0rem 0rem 1.5rem 0rem $light-shadow;
+
+
+  .sider_content {
+    .icon {
+      font-size: 1.2rem;
+    }
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .items_end {
+      margin-top: auto;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@import '/src/styles/colors.scss';
+
+.field-header-container {
+    padding: 1.2rem;
+    border: 0.2rem solid $border;
+    background-color: $geek-blue;
+}
+
+.field-header-heading-container {
+    gap: 0.25rem;
+    align-self: stretch;
+}
+
+.field-header-heading {
+    color: $black;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.275rem;
+}

@@ -1,0 +1,240 @@
+@import '/src/styles/colors.scss';
+
+.name_heading {
+  font-family: Inter;
+  font-size: 2rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2.5rem;
+  /* 125% */
+  letter-spacing: -0.03rem;
+
+}
+
+.meet_icon {
+  height: 1.4rem;
+  width: 1.4rem;
+  border-radius: 10rem;
+}
+
+.detailCardStyle {
+
+
+  .cardHeading {
+    color: $resource-card-job-title;
+    display: -webkit-box; // Needed for webkit-based browsers
+    -webkit-line-clamp: 1; // Specifies the number of lines to show
+    -webkit-box-orient: vertical; // Specifies the box orientation for line clamping
+    overflow: hidden;
+    text-overflow: ellipsis; // Adds ellipsis
+    white-space: nowrap; // Prevents text wrapping
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+  }
+
+  .cardDescription {
+
+    font-family: Inter;
+    font-size: 1.875rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 2.375rem;
+    /* 126.667% */
+  }
+
+
+}
+
+.card_heading {
+  text-align: center;
+  font-feature-settings: 'liga' off, 'clig' off;
+  font-family: Inter;
+  font-size: 0.688rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1rem;
+  /* 145.455% */
+}
+
+.card_Desc {
+  text-align: center;
+  font-feature-settings: 'liga' off, 'clig' off;
+  font-family: Inter;
+  font-size: 0.888rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1rem;
+  /* 145.455% */
+}
+
+.card_number {
+  text-align: right;
+  font-family: Inter;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.03rem;
+}
+
+.line_chart_heading {
+  font-family: Inter;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.75rem;
+  text-align: left;
+}
+
+.img_styles {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+
+.heading {
+  font-family: Inter;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.48px;
+}
+
+.card_height {
+  height: 17.3rem;
+}
+
+
+.miniCard {
+  border-radius: 1rem;
+  border: 0.063rem solid $border-disabled;
+  background: $card-background-grey;
+
+  .heading {
+    text-align: center;
+    font-feature-settings: 'liga' off, 'clig' off;
+    /* Body/Info */
+    font-family: Inter;
+    font-size: 0.688rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1rem;
+  }
+
+  .date {
+    text-align: center;
+    /* Body/Normal */
+    font-family: Inter;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.25rem;
+    /* 166.667% */
+    letter-spacing: -0.004rem;
+  }
+}
+
+.miniCard_selected {
+  border-radius: 1rem;
+  border: 0.063rem solid $border-disabled;
+  background: $light-blue;
+
+
+  .heading {
+    color: $primary;
+    text-align: center;
+    font-feature-settings: 'liga' off, 'clig' off;
+    /* Body/Info */
+    font-family: Inter;
+    font-size: 0.688rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1rem;
+  }
+
+  .date {
+    color: $primary;
+    text-align: center;
+    /* Body/Normal */
+    font-family: Inter;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.25rem;
+    /* 166.667% */
+    letter-spacing: -0.004rem;
+  }
+}
+
+.selected_month {
+  border-radius: 0.375rem;
+  background: $tag-grey-background;
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  color: $tag-grey-text;
+  /* Text sm/Semibold */
+  font-family: Inter;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.813rem;
+  cursor: pointer;
+  /* 142.857% */
+}
+
+.month {
+  cursor: pointer;
+  border-radius: 0.375rem;
+  display: flex;
+  padding: 0.5rem 0.75rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  color: $tag-grey-text;
+  /* Text sm/Semibold */
+  font-family: Inter;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.813rem;
+  /* 142.857% */
+}
+
+
+.table_height {
+  min-height: 28rem;
+  overflow: hidden;
+}
+
+.interviewCard {
+  border-radius: 1rem;
+  background: $card-background;
+  padding: 1rem 0rem;
+  height: 90%;
+
+  .heading {
+    font-family: Inter;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.03rem;
+  }
+
+  .description {
+    text-align: center;
+    font-feature-settings: 'liga' off, 'clig' off;
+    /* Body/Info */
+    font-family: Inter;
+    font-size: 0.688rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1rem;
+  }
+}

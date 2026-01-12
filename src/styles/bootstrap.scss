@@ -1,0 +1,14 @@
+@import "/src/styles/colors.scss";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+$theme-colors: map-merge($theme-colors,
+    ("primary": $primary,
+      "light": $white,
+      "green": $light-green,
+      "grey": $background-grey,
+      "border": $border,
+      "slate":$slate ));
+
+@import "~bootstrap/scss/bootstrap.scss";

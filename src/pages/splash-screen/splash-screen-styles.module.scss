@@ -1,0 +1,17 @@
+@import "~bootstrap/scss/bootstrap";
+@import '/src/styles/colors.scss';
+
+.text_div_splash {
+  gap: 2.5rem;
+  height: min-content;
+}
+
+.splash_text {
+  text-align: center;
+  color: $white;
+  font-size: 1.87rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.5rem;
+  width: 34.37rem;
+}

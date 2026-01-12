@@ -1,0 +1,39 @@
+@import "/src/styles/colors.scss";
+
+.body_styles_success {
+  padding-top: 1.2rem !important;
+  padding-bottom: 0.5rem !important;
+  font-family: Inter;
+  font-size: 0.87rem;
+  color: $text-color;
+  background: $light-green;
+  border: $border-green;
+  border-width: 0.5rem;
+}
+
+.body_styles_error {
+  padding-top: 1.2rem;
+  padding-bottom: "0.5rem";
+  font-family: Inter;
+  font-size: 0.87rem;
+  color: $text-color;
+  background-color: $light-red;
+  border: $busy;
+  border-width: 0.5rem;
+}
+
+.body_styles_warning {
+  padding-top: 1.2rem;
+  padding-bottom: "0.5rem";
+  font-family: Inter;
+  font-size: 0.87rem;
+  color: $text-color;
+}
+
+.body_styles_info {
+  padding-top: 1.2rem;
+  padding-bottom: "0.5rem";
+  font-family: Inter;
+  font-size: 0.87rem;
+  color: $text-color;
+}

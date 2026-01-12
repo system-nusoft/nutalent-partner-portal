@@ -1,0 +1,20 @@
+@import '/src/styles/colors.scss';
+
+
+.add-new-row-container-grey {
+  padding: 0.313rem 1rem;
+  gap: 0.25rem;
+  align-self: stretch;
+  border-radius: 0.125rem;
+  border: 0.063rem dashed $border;
+  background: $white;
+  box-shadow: 0rem 0.125rem 0rem 0rem $shadow;
+  cursor: pointer;
+}
+
+.add-new-row-button-text {
+  color: $text-color;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.375rem;
+}

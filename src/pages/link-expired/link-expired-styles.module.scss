@@ -1,0 +1,22 @@
+@import "~bootstrap/scss/bootstrap";
+@import '/src/styles/colors.scss';
+
+
+.text_div_link {
+  gap: 4rem;
+  height: min-content;
+}
+
+.btn_div_link {
+  gap: 1rem;
+}
+
+.text_link {
+  text-align: center;
+  color: $white;
+  font-size: 2.375rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.875rem;
+  height: min-content;
+}

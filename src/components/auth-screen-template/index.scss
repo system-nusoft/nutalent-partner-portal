@@ -1,0 +1,35 @@
+@import '/src/styles/colors.scss';
+@import "~bootstrap/scss/bootstrap";
+
+$background-image: url('~/src/assets/images/background.png');
+$background-size: cover;
+$background-position: center;
+$background-blend-mode: overlay;
+
+.main {
+  background-image: $background-image;
+  background-size: $background-size;
+  background-position: $background-position;
+  background-blend-mode: $background-blend-mode;
+  background-color: $background-color;
+}
+
+.logo-div {
+  width: 24.75rem;
+}
+
+.slogan {
+  color: #fff;
+  font-size: 1.875rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 2.5rem;
+}
+
+.copyright-text-style-black {
+  color: $text-color;
+  font-size: 0.87rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.37rem;
+}

@@ -1,0 +1,51 @@
+@import "/src/styles/colors.scss";
+
+.cost_box {
+
+
+  .heading {
+    color: $text-color;
+    font-family: Inter;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5rem;
+    /* 120% */
+  }
+
+  .desc {
+    color: $desc-text;
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+
+  .descHeading {
+    color: $desc-text;
+    font-family: Inter;
+    font-size: 0.975rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+
+  .desc_h2 {
+    color: $desc-text;
+    font-family: Inter;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 1.375rem;
+  }
+
+  .input {
+    color: $light-black;
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+}

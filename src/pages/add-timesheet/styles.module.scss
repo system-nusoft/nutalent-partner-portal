@@ -1,0 +1,59 @@
+@import '/src/styles/colors.scss';
+
+.card_heading {
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-family: Inter;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 0.875rem;
+    /* 100% */
+}
+
+.card_desc {
+    font-feature-settings: 'liga' off, 'clig' off;
+    font-family: Inter;
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 180%;
+    /* 21.6px */
+}
+
+.card {
+
+    padding: 1rem;
+    height: 10.5rem;
+    overflow: auto;
+
+    .card_heading {
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-family: Inter;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 0.875rem;
+        /* 100% */
+    }
+
+    .card_desc {
+        font-feature-settings: 'liga' off, 'clig' off;
+        font-family: Inter;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 180%;
+        /* 21.6px */
+    }
+}
+
+
+.switch_text {
+    color: $tag-grey-text;
+    font-family: Inter;
+    font-size: 0.87rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+    /* 142.857% */
+}

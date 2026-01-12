@@ -1,0 +1,55 @@
+@import "/src/styles/colors.scss";
+
+.resource_profile_details_div {
+    width: 95%;
+    padding: 1.5rem;
+    gap: 1rem;
+    z-index: 0;
+
+    .container_styles {
+        background: $background-grey;
+        position: relative;
+
+
+        .watermark {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .close_icon_style {
+            position: absolute;
+            top: -1rem;
+            right: -1rem;
+            color: $image-box;
+        }
+
+        .icon_style {
+            font-size: 2.4rem;
+            color: $primary;
+        }
+
+        .text_heading {
+            color: $text-color;
+            text-align: center;
+            /* H5/regular */
+            font-family: Inter;
+            font-size: 1rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.5rem;
+        }
+
+        .text_desc {
+            color: $light-text;
+            text-align: center;
+            /* Body/regular */
+            font-family: Inter;
+            font-size: 0.8rem;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.4rem;
+        }
+    }
+
+}

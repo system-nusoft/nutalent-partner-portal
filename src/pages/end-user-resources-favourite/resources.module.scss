@@ -1,0 +1,17 @@
+@import "~bootstrap/scss/bootstrap";
+@import "/src/styles/colors.scss";
+
+.table_action_buttons {
+    color: $primary;
+    cursor: pointer;
+    text-decoration: underline; // Optional for making links look like buttons
+
+    &:hover {
+        text-decoration: none; // Remove underline on hover, if desired
+    }
+}
+
+.editActionButton {
+    font-size: 1.2rem;
+    color: $light-black;
+}

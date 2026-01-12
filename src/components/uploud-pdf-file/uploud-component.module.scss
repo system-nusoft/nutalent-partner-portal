@@ -1,0 +1,26 @@
+@import "~bootstrap/scss/bootstrap";
+@import '../../styles/colors';
+
+.upload_pdf_div {
+  padding: 1rem 0;
+  gap: 1.25rem;
+  align-self: stretch;
+  border-radius: 0.125rem;
+  border: 0.063rem solid $border;
+  background: $light-grey-background;
+
+  .upload_pdf_heading {
+    color: $text-color;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5rem;
+  }
+
+  .upload_pdf_desc {
+    color: $light-text;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+}

@@ -1,0 +1,32 @@
+@import '/src/styles/colors.scss';
+
+
+.tea_gif {
+    width: 12.313rem;
+    height: 12.313rem;
+    background: url('../../assets/gif/tea.gif') lightgray 50% / cover no-repeat;
+    mix-blend-mode: multiply;
+}
+
+.resource_added_text_heading {
+    color: $text-color;
+    text-align: center;
+    /* H1/medium */
+    font-family: Inter;
+    font-size: 2.375rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 2.875rem;
+}
+
+
+.resource_added_text_heading_desc {
+    color: $text-color;
+    text-align: center;
+    /* H1/medium */
+    font-family: Inter;
+    font-size: 1.25rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.75rem;
+}

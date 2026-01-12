@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/bootstrap";
+@import "/src/styles/colors.scss";
+
+.add_new_resource_style {
+  gap: 2.9rem;
+  position: relative;
+
+  .progress_view {
+    margin: -2rem 5rem;
+    width: 83%;
+    z-index: 1;
+    position: fixed;
+  }
+
+  .add_new_resource_container {
+    gap: 2.5rem;
+    padding-bottom: 3rem;
+    margin-top: 5rem;
+    width: 100%;
+  }
+}
