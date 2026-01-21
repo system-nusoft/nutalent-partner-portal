@@ -155,18 +155,23 @@ export const HomePage: React.FC = () => {
     }
   }, [user]);
 
+  console.log("Admin Dashboard Data:", dashboardData);
+  console.log("Partner Dashboard Data:", dashboardPartnerData);
+
   const cards = [
     {
       name: t("heading.totalResources"),
       des: t("text.allTime"),
-      value: isPartner() ? dashboardPartnerData?.totalResources ?? 0 : 0,
+      value: isPartner()
+        ? dashboardPartnerData?.totalResources ?? 0
+        : dashboardData?.totalResources ?? 0,
     },
     {
       name: t("heading.totalHiredResources"),
       des: t("text.allTime"),
       value: isPartner()
         ? dashboardPartnerData?.totalHiredResources?.totalHiredResources ?? 0
-        : 0,
+        : dashboardData?.totalHiredResources ?? 0,
     },
     {
       name: isPartner()

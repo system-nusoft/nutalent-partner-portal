@@ -7810,7 +7810,7 @@ nth-check@^2.0.1:
   dependencies:
     boolbase "^1.0.0"
 
-nusoft_components@^0.1.58:
+nusoft_components@^0.1.60:
   version "0.1.60"
   resolved "https://registry.npmjs.org/nusoft_components/-/nusoft_components-0.1.60.tgz"
   integrity sha512-Vhsd9g+EZr1FF0JIPgHZ+8AIcK7BouNYs54WCq5soud2fTiIQZThMiD/cdbbbm0TLaxDCFWXGBZjf3Ls8aVtdw==

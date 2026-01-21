@@ -59,6 +59,8 @@ export const HomePagePartner: React.FC = () => {
       dispatch(RequestAppAction.handleGetDashoard({ id: user?.partnerId }));
   }, [user]);
 
+  console.log("Partner Dashboard Data:", dashboardData);
+
   const cards = [
     {
       name: t("heading.totalResources"),
@@ -68,7 +70,7 @@ export const HomePagePartner: React.FC = () => {
     {
       name: t("heading.totalHired"),
       des: t("text.currently"),
-      value: 0,
+      value: dashboardData?.totalHiredResources,
     },
     {
       name: t("heading.totalActiveEngagements"),
