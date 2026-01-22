@@ -43,7 +43,7 @@ export const HomePagePartner: React.FC = () => {
             x: month,
             y: total,
             countByDomain: countByDomain,
-          })
+          }),
         ),
 
         fill: 1,
@@ -58,8 +58,6 @@ export const HomePagePartner: React.FC = () => {
     if (user)
       dispatch(RequestAppAction.handleGetDashoard({ id: user?.partnerId }));
   }, [user]);
-
-  console.log("Partner Dashboard Data:", dashboardData);
 
   const cards = [
     {
