@@ -9,6 +9,7 @@ export enum STATUS {
   AVAILABLE = "Available",
   BUSY = "Busy",
   VACATUION = "Vacation",
+  HIRED = "Hired",
 }
 
 export enum USER_RESOURCE_FILTER {
