@@ -100,14 +100,14 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
       const days = Interview?.days;
       form.setFieldsValue({
         availability: availableFrom ? dayjs(availableFrom) : null,
-        rate: hourlyRate,
+        rate: hourlyRate ?? 0,
         timeSlot:
           Interview?.startTime && Interview?.endTime
             ? [dayjs(Interview?.startTime), dayjs(Interview?.endTime)]
             : null,
-        duration: Interview?.duration,
+        duration: Interview?.duration ?? interviewLimits[0],
         days: days ? days?.split(", ").map((day: string) => day.trim()) : null,
-        timeZone: Interview?.timeZone,
+        timeZone: Interview?.timeZone ?? moment.tz.guess(),
       });
 
       if (Array.isArray(interviewTimeSlots)) {

@@ -9,8 +9,8 @@ const ResourceAdded = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const navigateToDashboard = () => {
-    navigate(PrivateRoutes.DASHBOARD);
+  const navigateToResources = () => {
+    navigate(PrivateRoutes.RESOURCES);
   };
   return (
     <Content className="d-flex  p-5 w-75 rounded-1 flex-column gap-4">
@@ -27,7 +27,7 @@ const ResourceAdded = () => {
         <Flex>
           <Button
             label={t("button.navigateToResources")}
-            onClick={navigateToDashboard}
+            onClick={navigateToResources}
             btnClass="filledBtnLarge"
           />
         </Flex>

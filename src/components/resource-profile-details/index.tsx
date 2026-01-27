@@ -142,7 +142,7 @@ const ResourceProfileDetails = ({ onSuccess }: props) => {
           current={currentTab}
           items={[
             {
-              title: "Personal info",
+              title: "Personal info *",
 
               onClick: () => onChange(0),
 

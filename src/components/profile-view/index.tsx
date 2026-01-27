@@ -123,6 +123,28 @@ const ProfileView: React.FC = () => {
     return result;
   };
 
+  const renderInterviewSlotTag = () => {
+    const slots = profile?.interviewTimeSlots;
+    if (!Array.isArray(slots) || slots.length === 0) {
+      return (
+        <RoundTag
+          text={t("No Interviews Scheduled")}
+          color="grey"
+        />
+      );
+    }
+    const formatted = slots.map(
+      (s: any) => `${s.startTime} - ${s.endTime}`
+    );
+
+    return (
+      <RoundTag
+        text={`Scheduled Interview Time Slot: ${formatted.join(", ")}`}
+        color="blue"
+      />
+    );
+  };
+
   return (
     <Content className="h-100 w-100  px-5">
       <Spin spinning={isLoading}>
@@ -175,6 +197,9 @@ const ProfileView: React.FC = () => {
                 color="green"
               />
             )}
+          </Flex>
+          <Flex gap={12}>
+            {renderInterviewSlotTag()}
           </Flex>
 
           {transparentCard({
