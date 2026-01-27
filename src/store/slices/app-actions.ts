@@ -629,6 +629,17 @@ class RequestAppAction {
       payload,
     };
   }
+  static handlePartnerInvoiceAction(payload: {
+    id: string;
+    data: { action: "Pay" | "Decline" };
+    cbSuccess?: (res: any) => void;
+    cbFailure?: (mes: string) => void;
+  }) {
+    return {
+      type: requestTypes.PARTNER_INVOICE_ACTION_REQUEST,
+      payload,
+    };
+  }
   static handleGetDashboardTimesheetList(payload?: {
     id: string;
     data: { status: TIMESHEET_STATUS };
@@ -648,6 +659,16 @@ class RequestAppAction {
   }) {
     return {
       type: requestTypes.GET_DASHBOARD_REVENUE_REQUEST,
+      payload,
+    };
+  }
+  static handleGetAdminDashboardRevenueChart(payload?: {
+    data: { startDate: string; endDate: string };
+    cbSuccess?: (res: any) => void;
+    cbFailure?: (mes: string) => void;
+  }) {
+    return {
+      type: requestTypes.GET_DASHBOARD_REVENUE_ADMIN_REQUEST,
       payload,
     };
   }

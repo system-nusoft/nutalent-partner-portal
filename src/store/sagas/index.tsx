@@ -21,7 +21,10 @@ import { watchPartners } from "./get-partners-saga";
 import { watchGetProject } from "./get-project-saga";
 import { watchGetResourceById } from "./get-resource-by-id-saga";
 import { watchGetResources } from "./get-resources-saga";
-import { watchGetRevenueDashboard } from "./get-revenue-saga";
+import {
+  watchGetRevenueDashboard,
+  watchGetAdminRevenueDashboard,
+} from "./get-revenue-saga";
 import { watchGetSkill } from "./get-skills-saga";
 import { watchGetTimeZones } from "./get-time-zone";
 import { watchGetTimesheetById } from "./get-timesheet-by-id-saga";
@@ -33,6 +36,7 @@ import { watchSignout } from "./logout";
 import { watchPatchPartnerStatus } from "./partner-status-saga";
 import { watchFetchPatchEngagements } from "./patch-engagement-saga";
 import { watchPatchInvoice } from "./patch-invoices-status-saga";
+import { watchPartnerInvoiceAction } from "./partner-invoice-action-saga";
 import { watchPostEducation } from "./post-education-saga";
 import { watchPostExperience } from "./post-experience-saga";
 import { watchPostForgotPassword } from "./post-forgot-password-saga";
@@ -104,8 +108,10 @@ export default function* rootSaga() {
     watchGetInvoicesList(),
     watchGetInvoiceById(),
     watchPatchInvoice(),
+    watchPartnerInvoiceAction(),
     watchGetDashboardTimesheetListing(),
     watchGetRevenueDashboard(),
+    watchGetAdminRevenueDashboard(),
     watchGetResourceTotalHoursDashboard(),
     watchPostForgotPassword(),
     watchFetchPatchEngagements(),

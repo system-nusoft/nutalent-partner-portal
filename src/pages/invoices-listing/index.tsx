@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { limit } from "src/constants/end-points";
 import { ROUTES } from "src/constants/navigation-routes";
-import { INVOICES_STATUS } from "src/constants/roles";
+import { INVOICES_STATUS, ROLES } from "src/constants/roles";
+import { isSuperAdmin } from "src/services/user-type";
 import {
   getInvoicesList,
   getInvoicesMeta,
@@ -37,13 +38,15 @@ export const InvoicesListing: React.FC = () => {
         cbSuccess: () => {
           if (func) func();
         },
-      })
+      }),
     );
   };
 
   useEffect(() => {
     onFetchData({ page: page, limit: limit });
   }, []);
+  const isAdmin = isSuperAdmin();
+
   const columns: any = [
     {
       title: t("table.column.invoice"),
@@ -51,10 +54,27 @@ export const InvoicesListing: React.FC = () => {
       dataIndex: "invoiceNumber",
     },
     {
-      title: t("table.column.payment"),
-      key: "totalAmount",
-      dataIndex: "totalAmount",
+      title: isAdmin ? "EndUser Paid" : t("table.column.payment"),
+      key: isAdmin ? "netAmount" : "totalAmount",
+      dataIndex: isAdmin ? "netAmount" : "totalAmount",
+      render: (value: string) => `$${value}`,
     },
+    ...(isAdmin
+      ? [
+          {
+            title: "Platform Fee",
+            key: "nutalentFee",
+            dataIndex: "nutalentFee",
+            render: (value: string) => `$${value}`,
+          },
+          {
+            title: "Partner Share",
+            key: "totalAmount",
+            dataIndex: "totalAmount",
+            render: (value: string) => `$${value}`,
+          },
+        ]
+      : []),
     {
       title: t("table.column.issueDate"),
       key: "issueDate",
@@ -93,11 +113,32 @@ export const InvoicesListing: React.FC = () => {
     },
     {
       title: <>{t("table.column.status")}</>,
-      key: "payoutStatus",
-      dataIndex: "payoutStatus",
-      render: (status: any) => (
-        <>{status ? <StatusTag tags={status} /> : "-"}</>
-      ),
+      key: "status",
+      render: (_: undefined, record: any) => {
+        if (isAdmin) {
+          return (
+            <div className="d-flex flex-column gap-1">
+              <div>
+                <small className="text-muted">EndUser: </small>
+                <StatusTag tags={record.paymentStatus} />
+              </div>
+              <div>
+                <small className="text-muted">Partner: </small>
+                <StatusTag tags={record.payoutStatus} />
+              </div>
+            </div>
+          );
+        }
+        return (
+          <>
+            {record.payoutStatus ? (
+              <StatusTag tags={record.payoutStatus} />
+            ) : (
+              "-"
+            )}
+          </>
+        );
+      },
     },
 
     {
@@ -173,18 +214,22 @@ export const InvoicesListing: React.FC = () => {
       <div className="bg-white rounded-4 w-100 p-3 ">
         <div className="d-flex gap-5 align-content-center justify-content-start">
           <div className="d-flex gap-2 flex-column">
-            <div className={styles.card_mini_heading}>
-              {t("heading.incomingFunds")}
-            </div>
+            <div className={styles.card_mini_heading}>Pending Funds</div>
             <div className={styles.card_desc}>
-              ${meta?.pendingAmount ?? "0"}
+              $
+              {isAdmin
+                ? (meta?.pendingMarginAmount ?? "0")
+                : (meta?.pendingAmount ?? "0")}
             </div>
           </div>
           <div className="d-flex gap-2 border border-start ps-5 border-0 flex-column">
-            <div className={styles.card_mini_heading}>
-              {t("heading.totalFunds")}
+            <div className={styles.card_mini_heading}>Received Funds</div>
+            <div className={styles.card_desc}>
+              $
+              {isAdmin
+                ? (meta?.paidMarginAmount ?? "0")
+                : (meta?.paidAmount ?? "0")}
             </div>
-            <div className={styles.card_desc}>${meta?.paidAmount ?? "0"}</div>
           </div>
         </div>
       </div>

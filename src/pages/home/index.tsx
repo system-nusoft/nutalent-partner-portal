@@ -157,6 +157,15 @@ export const HomePage: React.FC = () => {
 
   const cards = [
     {
+      name: isPartner()
+        ? t("heading.totalResources")
+        : t("heading.totalRevenue"),
+      des: t("text.allTime"),
+      value: isPartner()
+        ? (dashboardPartnerData?.totalResources ?? 0)
+        : t("common.currencySign") + "" + (dashboardData?.totalRevenue ?? 0),
+    },
+    {
       name: t("heading.totalResources"),
       des: t("text.allTime"),
       value: isPartner()
@@ -609,28 +618,31 @@ export const HomePage: React.FC = () => {
       endDate: val, // Current date as ISO string
     };
 
-    dispatch(
-      RequestAppAction.handleGetDashboardResourceHoursChart({
-        id: user?.partnerId,
-        data: { startDate: range.endDate, endDate: range.startDate },
-        cbSuccess: (res) => {
-          if (res?.labels?.length > 0) {
-            setTotalHoursChartData((pre) => ({
-              ...pre,
-              series: res?.values?.length > 0 ? res?.values : [100],
-              options: {
-                ...pre.options,
-                tooltip: { enabled: true },
-                labels: res?.labels?.length > 0 ? res?.labels : [""],
-              },
-            }));
-            setTopPerformersNotFound(false);
-          } else {
-            setTopPerformersNotFound(true);
-          }
-        },
-      }),
-    );
+    // Only call resource hours API for partners
+    if (isPartner() && user?.partnerId) {
+      dispatch(
+        RequestAppAction.handleGetDashboardResourceHoursChart({
+          id: user?.partnerId,
+          data: { startDate: range.endDate, endDate: range.startDate },
+          cbSuccess: (res) => {
+            if (res?.labels?.length > 0) {
+              setTotalHoursChartData((pre) => ({
+                ...pre,
+                series: res?.values?.length > 0 ? res?.values : [100],
+                options: {
+                  ...pre.options,
+                  tooltip: { enabled: true },
+                  labels: res?.labels?.length > 0 ? res?.labels : [""],
+                },
+              }));
+              setTopPerformersNotFound(false);
+            } else {
+              setTopPerformersNotFound(true);
+            }
+          },
+        }),
+      );
+    }
   };
 
   const [resourceBreakdownNotFound, setResourceBreakdownNotFound] =
@@ -656,6 +668,9 @@ export const HomePage: React.FC = () => {
     }
   };
   const switchTotalHoursTab = (key: string) => {
+    // Only switch total hours tabs for partners
+    if (!isPartner()) return;
+
     switch (key) {
       case "1":
         updateTotalHoursChart(createDate(7, "day"));
@@ -772,6 +787,11 @@ export const HomePage: React.FC = () => {
   };
 
   const fetchRevenueChart = (key: string) => {
+    // Don't fetch if user data is not available
+    if (!user) {
+      return;
+    }
+
     let range = {
       startDate: new Date().toISOString(), // Current date as ISO string
       endDate: new Date().toISOString(), // Current date as ISO string
@@ -798,7 +818,9 @@ export const HomePage: React.FC = () => {
       default:
         break;
     }
-    if (user?.partnerId) {
+
+    if (isPartner() && user?.partnerId) {
+      // Partner-specific revenue data
       dispatch(
         RequestAppAction.handleGetDashboardRevenueChart({
           id: user?.partnerId,
@@ -808,11 +830,23 @@ export const HomePage: React.FC = () => {
           },
         }),
       );
+    } else if (!isPartner()) {
+      // SuperAdmin revenue data (platform-wide)
+      dispatch(
+        RequestAppAction.handleGetAdminDashboardRevenueChart({
+          data: { startDate: range.endDate, endDate: range.startDate },
+          cbSuccess: (res) => {
+            handleTimelineChange(key, res);
+          },
+        }),
+      );
+    } else {
     }
   };
 
   useEffect(() => {
-    if (user?.partnerId) {
+    if (isPartner()) {
+      // Partner-specific data fetching
       fetchRevenueChart("1");
       switchTotalHoursTab("1");
       dispatch(
@@ -821,6 +855,9 @@ export const HomePage: React.FC = () => {
           data: { status: TIMESHEET_STATUS.PENDING_APPROVAL },
         }),
       );
+    } else {
+      // SuperAdmin data fetching
+      fetchRevenueChart("1");
     }
   }, [user]);
 
@@ -912,6 +949,9 @@ export const HomePage: React.FC = () => {
                 defaultActiveKey="1"
                 items={items}
                 onChange={(i: any) => {
+                  // Only fetch revenue chart if user data is available
+                  if (!user) return;
+
                   fetchRevenueChart(i);
                 }}
               />

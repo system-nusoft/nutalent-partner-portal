@@ -1,11 +1,13 @@
 import { ExportOutlined } from "@ant-design/icons";
 import { Spin, Table, Tag, Tooltip } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect } from "react";
+import { Button, StatusTag } from "nusoft_components";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "src/constants/navigation-routes";
+import { isPartner, isSuperAdmin } from "src/services/user-type";
 import { getInvoicesData } from "src/store/selectors/features/invoices-selector";
 import RequestAppAction from "src/store/slices/app-actions";
 import { colors } from "src/styles/colors";
@@ -21,6 +23,69 @@ export const InvoiceById: React.FC = () => {
   const pathname = location.pathname;
   const match = pathname.match(/invoices\/([^/]+)/);
   const id = match ? match[1] : null;
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<"Pay" | "Decline" | null>(
+    null,
+  );
+  const isPartnerRole = isPartner();
+  const isAdminRole = isSuperAdmin();
+
+  const handlePartnerAction = (action: "Pay" | "Decline") => {
+    if (!id) return;
+    setIsLoading(true);
+    setLoadingAction(action);
+    dispatch(
+      RequestAppAction.handlePartnerInvoiceAction({
+        id,
+        data: { action },
+        cbSuccess: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+          // Refresh invoice data
+          dispatch(
+            RequestAppAction.handleGetInvoiceById({
+              id,
+            }),
+          );
+        },
+        cbFailure: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+        },
+      }),
+    );
+  };
+
+  const getStatusDisplay = () => {
+    if (isAdminRole) {
+      // SuperAdmin sees both statuses with better labels
+      return (
+        <div className="d-flex flex-column gap-2">
+          <div>
+            <small className="text-muted">Client Status: </small>
+            <StatusTag tags={invoice?.paymentStatus || "Pending"} />
+          </div>
+          <div>
+            <small className="text-muted">Partner Status: </small>
+            <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+          </div>
+        </div>
+      );
+    } else if (isPartnerRole) {
+      // Partner sees a single Status mapped from payoutStatus
+      return (
+        <div>
+          <small className="text-muted">Status: </small>
+          <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+        </div>
+      );
+    }
+    // Default to payoutStatus
+    return <StatusTag tags={invoice?.payoutStatus || "Pending"} />;
+  };
+
+  const showActionButtons =
+    isPartnerRole && invoice?.paymentStatus === "Confirmation Pending";
 
   useEffect(() => {
     if (id)
@@ -30,7 +95,7 @@ export const InvoiceById: React.FC = () => {
           cbFailure: () => {
             // navigate(ROUTES.INVOICES);
           },
-        })
+        }),
       );
   }, []);
 
@@ -47,7 +112,7 @@ export const InvoiceById: React.FC = () => {
           resourceId: string;
           engagementId: string;
           id: string;
-        }
+        },
       ) => {
         const date = new Date(name);
         return (
@@ -70,7 +135,7 @@ export const InvoiceById: React.FC = () => {
                     navigate(
                       ROUTES.VIEW_TIMESHEET_BY_ID.replace(
                         ":id",
-                        invoice?.Engagements?.resourceId
+                        invoice?.Engagements?.resourceId,
                       )
                         .replace(":timeId", record?.id)
                         .concat(`?engId=${record?.engagementId}`),
@@ -79,7 +144,7 @@ export const InvoiceById: React.FC = () => {
                           startDate: record?.startDate,
                           endDate: record?.endDate,
                         },
-                      }
+                      },
                     );
                   }
                 }}
@@ -139,7 +204,7 @@ export const InvoiceById: React.FC = () => {
                         invoice?.Timesheet?.length > 0
                           ? invoice?.Timesheet[0]?.startDate
                           : new Date()
-                      }`
+                      }`,
                     ), // update in future
                     endDate: returnDateMonthAndYear(
                       `${
@@ -148,21 +213,19 @@ export const InvoiceById: React.FC = () => {
                           ? invoice?.Timesheet[invoice?.Timesheet?.length - 1]
                               ?.endDate
                           : new Date()
-                      }`
+                      }`,
                     ), // update in future
                   })}
                 </div>
               </div>
-              <div>
-                <Tag title="pending" color="pending" />
-              </div>
+              <div>{getStatusDisplay()}</div>
             </div>
             <div className="d-flex gap-5">
               <div className="d-flex flex-column">
                 <div className={styles.card_desc}>{t("heading.issueDate")}</div>
                 <div className={styles.card_date}>
                   {returnDateMonthAndYear(
-                    `${invoice?.issueDate ?? new Date()}`
+                    `${invoice?.issueDate ?? new Date()}`,
                   )}
                 </div>
               </div>
@@ -183,28 +246,81 @@ export const InvoiceById: React.FC = () => {
                 pagination={false}
               />
             </div>
-            <div className="d-flex justify-content-end align-items-center gap-3 mt-2">
-              <div className={styles.card_desc}>
-                {t("heading.totalAmount")}:
+            {isAdminRole ? (
+              // SuperAdmin sees complete financial breakdown
+              <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className={styles.card_desc}>EndUser Paid:</div>
+                  <div className={styles.card_amount}>
+                    ${invoice?.netAmount ?? "0"}
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className={styles.card_desc}>Platform Fee:</div>
+                  <div
+                    className={styles.card_amount}
+                    style={{ color: "#dc3545" }}
+                  >
+                    ${invoice?.nutalentFee ?? "0"}
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-center">
+                  <div className={styles.card_desc}>Partner Share:</div>
+                  <div
+                    className={styles.card_amount}
+                    style={{ color: "#28a745" }}
+                  >
+                    ${invoice?.totalAmount ?? "0"}
+                  </div>
+                </div>
+                <div className="d-flex justify-content-between align-items-center border-top pt-2">
+                  <div
+                    className={styles.card_desc}
+                    style={{ fontWeight: "bold" }}
+                  >
+                    Total Platform Revenue:
+                  </div>
+                  <div
+                    className={styles.card_amount}
+                    style={{ fontWeight: "bold", color: "#6f42c1" }}
+                  >
+                    ${invoice?.nutalentFee ?? "0"}
+                  </div>
+                </div>
               </div>
-              <div className={styles.card_amount}>
-                ${invoice?.totalAmount ?? "0"}
+            ) : (
+              // Partner sees only their amount
+              <div className="d-flex justify-content-end align-items-center gap-3 mt-2">
+                <div className={styles.card_desc}>
+                  {t("heading.totalAmount")}:
+                </div>
+                <div className={styles.card_amount}>
+                  ${invoice?.totalAmount ?? "0"}
+                </div>
               </div>
-            </div>
-            {/* <div className="d-flex justify-content-end align-items-center gap-3 ">
-              <div className={styles.card_desc}>
-                {t("heading.nuTalentFee")}:
+            )}
+            {showActionButtons && (
+              <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
+                <Button
+                  btnClass="actionBtnDanger"
+                  label={
+                    loadingAction === "Decline"
+                      ? "Declining..."
+                      : "Decline Invoice"
+                  }
+                  onClick={() => handlePartnerAction("Decline")}
+                  disabled={isLoading}
+                />
+                <Button
+                  btnClass="filledBtn"
+                  label={
+                    loadingAction === "Pay" ? "Processing..." : "Accept Invoice"
+                  }
+                  onClick={() => handlePartnerAction("Pay")}
+                  disabled={isLoading}
+                />
               </div>
-              <div className={styles.card_amount}>
-                ${invoice?.nutalentFee ?? "0"}
-              </div>
-            </div> */}
-            {/* <div className="d-flex justify-content-end align-items-center gap-3 ">
-              <div className={styles.card_desc}>{t("heading.employerAmount")}:</div>
-              <div className={styles.card_amount}>
-                ${invoice?.netAmount ?? "0"}
-              </div>
-            </div> */}
+            )}
           </div>
         </div>
       </div>

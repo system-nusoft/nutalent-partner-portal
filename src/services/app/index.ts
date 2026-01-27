@@ -628,6 +628,22 @@ export class AppService extends HttpService {
       throw prepareErrorResponse(error);
     }
   };
+  fetchPartnerInvoiceAction = async (
+    baseAuthUrl: string,
+    id: string,
+    data: any
+  ): Promise<any> => {
+    try {
+      const apiResponse = await this.patch(
+        `${baseAuthUrl}` + ENDPOINTS.PARTNER_INVOICE_ACTION(id),
+        data
+      );
+
+      return prepareResponseObject(apiResponse, RESPONSE_TYPES.SUCCESS);
+    } catch (error) {
+      throw prepareErrorResponse(error);
+    }
+  };
   fetchGetInvoicesListing = async (
     baseAuthUrl: string,
     data: any
@@ -681,6 +697,21 @@ export class AppService extends HttpService {
     try {
       const apiResponse = await this.get(
         baseAuthUrl + ENDPOINTS.DASHBOARD_REVENUE_DATA(id),
+        data
+      );
+
+      return prepareResponseObject(apiResponse, RESPONSE_TYPES.SUCCESS);
+    } catch (error) {
+      throw prepareErrorResponse(error);
+    }
+  };
+  getAdminDashboardRevenueData = async (
+    baseAuthUrl: string,
+    data: { startDate: string; endDate: string }
+  ): Promise<any> => {
+    try {
+      const apiResponse = await this.get(
+        baseAuthUrl + ENDPOINTS.DASHBOARD_REVENUE_DATA_ADMIN,
         data
       );
 

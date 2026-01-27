@@ -128,6 +128,35 @@ export const invoicesFeatureSlice = createSlice({
         data: null,
       },
     }),
+    togglePartnerInvoiceAction: (state) => {
+      state.state.isLoading = true;
+    },
+    togglePartnerInvoiceActionSuccess: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: null,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
+    togglePartnerInvoiceActionFailure: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: action.payload?.message,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
   },
   // A "builder callback" function used to add more reducers
 });
@@ -143,5 +172,8 @@ export const {
   togglePatchInvoice,
   togglePatchInvoiceFailure,
   togglePatchInvoiceSuccess,
+  togglePartnerInvoiceAction,
+  togglePartnerInvoiceActionSuccess,
+  togglePartnerInvoiceActionFailure,
 } = invoicesFeatureSlice.actions;
 export const invoicesFeatureReducer = invoicesFeatureSlice.reducer;

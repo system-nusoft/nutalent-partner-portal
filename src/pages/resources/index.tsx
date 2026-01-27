@@ -157,9 +157,12 @@ export const Resources: React.FC = () => {
         return (
           <Space size="small">
             {status ? (
-              <Tag color="green">Hired</Tag>
+              <Tag color="blue">Hired</Tag>
             ) : (
-              <StatusTag tags={record?.availabilityStatus ?? "Available"} />
+              <StatusTag
+                tags={record?.availabilityStatus ?? "Available"}
+                color="green"
+              />
             )}
           </Space>
         );
