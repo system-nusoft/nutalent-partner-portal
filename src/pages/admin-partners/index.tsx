@@ -43,7 +43,7 @@ export const AdminPartners: React.FC = () => {
 
   const onViewRow = (record: any) => {
     const path = generatePath(
-      PrivateRoutes.PARTNERRESOURCES.replace(":id", record.id)
+      PrivateRoutes.PARTNERRESOURCES.replace(":id", record.id),
     );
 
     dispatch(toggleSetPartnerId(record?.id));
@@ -57,7 +57,7 @@ export const AdminPartners: React.FC = () => {
 
   const onEditRow = (record: any) => {
     const path = generatePath(
-      PrivateRoutes.EDITPARTNERBYID.replace(":id", record.id)
+      PrivateRoutes.EDITPARTNERBYID.replace(":id", record.id),
     );
 
     navigate(path, {
@@ -78,11 +78,11 @@ export const AdminPartners: React.FC = () => {
             toggleGetPartnersUpdate({
               ...data,
               items: updateResourceStatus(data, id, value),
-            })
+            }),
           );
           restrictModalRef?.current?.closeModal();
         },
-      })
+      }),
     );
   };
 
@@ -96,7 +96,7 @@ export const AdminPartners: React.FC = () => {
 
   const columns = [
     {
-      title: "Company name",
+      title: "Company Name",
       dataIndex: "companyName",
       key: "companyName",
       width: 200,
@@ -108,7 +108,7 @@ export const AdminPartners: React.FC = () => {
       width: 200,
     },
     {
-      title: "Hired resources",
+      title: "Hired Resources",
       dataIndex: "hiredResources",
       key: "hiredResources",
       width: 200,
@@ -117,7 +117,7 @@ export const AdminPartners: React.FC = () => {
       render: (_: any, record: any) => record.hiredResources,
     },
     {
-      title: "Total resources",
+      title: "Total Resources",
       dataIndex: "totalResources",
       key: "totalResources",
       width: 200,
@@ -126,7 +126,7 @@ export const AdminPartners: React.FC = () => {
       render: (_: any, record: any) => record.totalResources,
     },
     {
-      title: "Total revenue",
+      title: "Total Revenue",
       dataIndex: "totalRevenue",
       key: "totalRevenue",
       width: 200,
@@ -135,7 +135,7 @@ export const AdminPartners: React.FC = () => {
       render: (_: any, record: any) => record.totalRevenue || "-",
     },
     {
-      title: "Onboarding date",
+      title: "Onboarding Date",
       dataIndex: "createdAt",
       key: "createdAt",
       sorter: (a: { createdOn: number }, b: { createdOn: number }) =>
@@ -209,7 +209,7 @@ export const AdminPartners: React.FC = () => {
         cbSuccess: () => {
           setPage(1);
         },
-      })
+      }),
     );
   };
 
@@ -226,7 +226,7 @@ export const AdminPartners: React.FC = () => {
         cbSuccess: () => {
           setPage(e);
         },
-      })
+      }),
     );
   };
 

@@ -155,8 +155,8 @@ export default [
       {
         component: <EditPartner />,
         path: "partners/:id",
-        title: "Edit partner",
-        label: "Edit partner",
+        title: "Edit Partner",
+        label: "Edit Partner",
         btn: "button.submit",
         permission: [ROLES.SUPER_ADMIN],
       },
@@ -222,8 +222,8 @@ export default [
   {
     component: <EndUserListing />,
     path: "end-users",
-    title: "End-users",
-    label: "End-users",
+    title: "End-Users",
+    label: "End-Users",
     icon: ({ fill = colors.textColor }: { fill: string }) => (
       <EndUserSidebarIcon fill={fill} />
     ),

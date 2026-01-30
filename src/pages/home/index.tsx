@@ -134,9 +134,9 @@ export const HomePage: React.FC = () => {
         ],
       },
       yaxis: {
-        max: 100,
+        max: 10000,
         min: 0,
-        stepSize: 20,
+        stepSize: 2000,
       },
       legend: {
         position: "top",
