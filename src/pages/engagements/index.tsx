@@ -58,7 +58,7 @@ export const Engagements: React.FC = () => {
       dataIndex: "resource",
       key: "resource",
       render: (val: any) =>
-        val?.firstName && val?.lastName
+        val?.firstName || val?.lastName
           ? `${val.firstName} ${val.lastName}`
           : "-",
     },
@@ -67,7 +67,7 @@ export const Engagements: React.FC = () => {
       dataIndex: "endUser",
       key: "endUser",
       render: (val: any) =>
-        val?.firstName && val?.lastName
+        val?.firstName || val?.lastName
           ? `${val.firstName} ${val.lastName}`
           : "-",
     },
