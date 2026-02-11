@@ -37,6 +37,8 @@ import { watchPatchPartnerStatus } from "./partner-status-saga";
 import { watchFetchPatchEngagements } from "./patch-engagement-saga";
 import { watchPatchInvoice } from "./patch-invoices-status-saga";
 import { watchPartnerInvoiceAction } from "./partner-invoice-action-saga";
+import { watchAdminInvoiceAction } from "./admin-invoice-action-saga";
+import { watchAdminPayPartner } from "./admin-pay-partner-saga";
 import { watchPostEducation } from "./post-education-saga";
 import { watchPostExperience } from "./post-experience-saga";
 import { watchPostForgotPassword } from "./post-forgot-password-saga";
@@ -109,6 +111,8 @@ export default function* rootSaga() {
     watchGetInvoiceById(),
     watchPatchInvoice(),
     watchPartnerInvoiceAction(),
+    watchAdminInvoiceAction(),
+    watchAdminPayPartner(),
     watchGetDashboardTimesheetListing(),
     watchGetRevenueDashboard(),
     watchGetAdminRevenueDashboard(),

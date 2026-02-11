@@ -47,6 +47,7 @@ const ENDPOINTS = {
   INVOICE_BY_ID: (invoiceId: string) => `invoice/${invoiceId}`,
   PATCH_INVOICE: (invoiceId: string) => `invoice/${invoiceId}/payout-status`,
   PARTNER_INVOICE_ACTION: (invoiceId: string) => `invoice/${invoiceId}/partner-action`,
+  ADMIN_INVOICE_ACTION: (invoiceId: string) => `invoice/${invoiceId}/admin-action`,
   DASHBOARD_TIMESHEET_LISTING: (id: string) => `timesheet/${id}/partner`,
   DASHBOARD_RESOURCE_HOURS_DATA: (id: string) =>
     `partner/${id}/dashboard-data/resource-hours`,

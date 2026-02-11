@@ -54,9 +54,9 @@ export const InvoicesListing: React.FC = () => {
       dataIndex: "invoiceNumber",
     },
     {
-      title: isAdmin ? "EndUser Paid" : t("table.column.payment"),
-      key: isAdmin ? "netAmount" : "totalAmount",
-      dataIndex: isAdmin ? "netAmount" : "totalAmount",
+      title: isAdmin ? "Amount" : t("table.column.payment"),
+      key: "totalAmount",
+      dataIndex: "totalAmount",
       render: (value: string) => `$${value}`,
     },
     ...(isAdmin
@@ -65,13 +65,15 @@ export const InvoicesListing: React.FC = () => {
             title: "Platform Fee",
             key: "nutalentFee",
             dataIndex: "nutalentFee",
-            render: (value: string) => `$${value}`,
+            render: (value: string, record: any) => 
+              record.invoiceType === "CLIENT" ? `$${value || 0}` : "-",
           },
           {
-            title: "Partner Share",
-            key: "totalAmount",
-            dataIndex: "totalAmount",
-            render: (value: string) => `$${value}`,
+            title: "Net Amount",
+            key: "netAmount",
+            dataIndex: "netAmount",
+            render: (value: string, record: any) => 
+              record.invoiceType === "CLIENT" ? `$${value || 0}` : "-",
           },
         ]
       : []),
@@ -116,18 +118,29 @@ export const InvoicesListing: React.FC = () => {
       key: "status",
       render: (_: undefined, record: any) => {
         if (isAdmin) {
-          return (
-            <div className="d-flex flex-column gap-1">
-              <div>
-                <small className="text-muted">EndUser: </small>
-                <StatusTag tags={record.paymentStatus} />
+          if (record.invoiceType === "CLIENT") {
+            return (
+              <div className="d-flex flex-column gap-1">
+                <div>
+                  <small className="text-muted">Client: </small>
+                  <StatusTag tags={record.paymentStatus || "Pending"} />
+                </div>
+                <div>
+                  <small className="text-muted">Partner: </small>
+                  <StatusTag tags={record.payoutStatus || "Pending"} />
+                </div>
               </div>
-              <div>
-                <small className="text-muted">Partner: </small>
-                <StatusTag tags={record.payoutStatus} />
+            );
+          } else {
+            return (
+              <div className="d-flex flex-column gap-1">
+                <div>
+                  <small className="text-muted">Partner: </small>
+                  <StatusTag tags={record.payoutStatus || "Pending"} />
+                </div>
               </div>
-            </div>
-          );
+            );
+          }
         }
         return (
           <>

@@ -640,6 +640,28 @@ class RequestAppAction {
       payload,
     };
   }
+  static handleAdminInvoiceAction(payload: {
+    id: string;
+    data: { action: "Confirm" | "Reject" };
+    cbSuccess?: (res: any) => void;
+    cbFailure?: (mes: string) => void;
+  }) {
+    return {
+      type: requestTypes.ADMIN_INVOICE_ACTION_REQUEST,
+      payload,
+    };
+  }
+  static handleAdminPayPartner(payload: {
+    id: string;
+    data: { status: string };
+    cbSuccess?: (res: any) => void;
+    cbFailure?: (mes: string) => void;
+  }) {
+    return {
+      type: requestTypes.ADMIN_PAY_PARTNER_REQUEST,
+      payload,
+    };
+  }
   static handleGetDashboardTimesheetList(payload?: {
     id: string;
     data: { status: TIMESHEET_STATUS };

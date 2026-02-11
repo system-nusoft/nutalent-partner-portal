@@ -350,11 +350,6 @@ export const TimesheetListing: React.FC = () => {
       });
   };
 
-  const disableFutureDates = (current: dayjs.Dayjs) => {
-    // Disable dates after today
-    return current && current.isAfter(dayjs().endOf("day"));
-  };
-
   return (
     <div>
       <Modal
@@ -385,9 +380,8 @@ export const TimesheetListing: React.FC = () => {
                 <RangePicker
                   className="w-100"
                   dropdownClassName={styles.zIndex}
-                  disabledDate={disableFutureDates}
-                  minDate={dayjs().endOf("day").subtract(6, "months")}
-                  maxDate={dayjs().endOf("day").add(5, "days")}
+                  minDate={dayjs().subtract(6, "months")}
+                  maxDate={dayjs().add(1, "year")}
                 />
               </Form.Item>
             </Spin>

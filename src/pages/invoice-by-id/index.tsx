@@ -24,7 +24,7 @@ export const InvoiceById: React.FC = () => {
   const match = pathname.match(/invoices\/([^/]+)/);
   const id = match ? match[1] : null;
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingAction, setLoadingAction] = useState<"Pay" | "Decline" | null>(
+  const [loadingAction, setLoadingAction] = useState<"Pay" | "Decline" | "Confirm" | "Reject" | "PayPartner" | null>(
     null,
   );
   const isPartnerRole = isPartner();
@@ -41,7 +41,56 @@ export const InvoiceById: React.FC = () => {
         cbSuccess: () => {
           setIsLoading(false);
           setLoadingAction(null);
-          // Refresh invoice data
+          dispatch(
+            RequestAppAction.handleGetInvoiceById({
+              id,
+            }),
+          );
+        },
+        cbFailure: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+        },
+      }),
+    );
+  };
+
+  const handleAdminAction = (action: "Confirm" | "Reject") => {
+    if (!id) return;
+    setIsLoading(true);
+    setLoadingAction(action);
+    dispatch(
+      RequestAppAction.handleAdminInvoiceAction({
+        id,
+        data: { action },
+        cbSuccess: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+          dispatch(
+            RequestAppAction.handleGetInvoiceById({
+              id,
+            }),
+          );
+        },
+        cbFailure: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+        },
+      }),
+    );
+  };
+
+  const handlePayPartner = () => {
+    if (!id) return;
+    setIsLoading(true);
+    setLoadingAction("PayPartner");
+    dispatch(
+      RequestAppAction.handleAdminPayPartner({
+        id,
+        data: { status: "Paid" },
+        cbSuccess: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
           dispatch(
             RequestAppAction.handleGetInvoiceById({
               id,
@@ -58,21 +107,32 @@ export const InvoiceById: React.FC = () => {
 
   const getStatusDisplay = () => {
     if (isAdminRole) {
-      // SuperAdmin sees both statuses with better labels
-      return (
-        <div className="d-flex flex-column gap-2">
-          <div>
-            <small className="text-muted">Client Status: </small>
-            <StatusTag tags={invoice?.paymentStatus || "Pending"} />
+      // SuperAdmin sees status based on invoice type
+      if (invoice?.invoiceType === "CLIENT") {
+        return (
+          <div className="d-flex flex-column gap-2">
+            <div>
+              <small className="text-muted">Client Payment: </small>
+              <StatusTag tags={invoice?.paymentStatus || "Pending"} />
+            </div>
+            <div>
+              <small className="text-muted">Partner Payout: </small>
+              <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+            </div>
           </div>
-          <div>
-            <small className="text-muted">Partner Status: </small>
-            <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+        );
+      } else {
+        return (
+          <div className="d-flex flex-column gap-2">
+            <div>
+              <small className="text-muted">Payout Status: </small>
+              <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+            </div>
           </div>
-        </div>
-      );
+        );
+      }
     } else if (isPartnerRole) {
-      // Partner sees a single Status mapped from payoutStatus
+      // Partner sees only payout status
       return (
         <div>
           <small className="text-muted">Status: </small>
@@ -80,12 +140,17 @@ export const InvoiceById: React.FC = () => {
         </div>
       );
     }
-    // Default to payoutStatus
     return <StatusTag tags={invoice?.payoutStatus || "Pending"} />;
   };
 
-  const showActionButtons =
+  const showPartnerActionButtons =
     isPartnerRole && invoice?.paymentStatus === "Confirmation Pending";
+
+  const showAdminActionButtons =
+    isAdminRole && invoice?.invoiceType === "CLIENT" && invoice?.paymentStatus === "Confirmation Pending";
+
+  const showPayPartnerButton =
+    isAdminRole && invoice?.invoiceType === "CLIENT" && invoice?.paymentStatus === "Paid" && invoice?.payoutStatus === "Pending";
 
   useEffect(() => {
     if (id)
@@ -247,47 +312,62 @@ export const InvoiceById: React.FC = () => {
               />
             </div>
             {isAdminRole ? (
-              // SuperAdmin sees complete financial breakdown
-              <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className={styles.card_desc}>EndUser Paid:</div>
-                  <div className={styles.card_amount}>
-                    ${invoice?.netAmount ?? "0"}
+              invoice?.invoiceType === "CLIENT" ? (
+                // SuperAdmin sees CLIENT invoice breakdown
+                <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>EndUser Paid:</div>
+                    <div className={styles.card_amount}>
+                      ${invoice?.netAmount ?? "0"}
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>Platform Fee:</div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ color: "#dc3545" }}
+                    >
+                      ${invoice?.nutalentFee ?? "0"}
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>Partner Share:</div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ color: "#28a745" }}
+                    >
+                      ${invoice?.totalAmount ?? "0"}
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center border-top pt-2">
+                    <div
+                      className={styles.card_desc}
+                      style={{ fontWeight: "bold" }}
+                    >
+                      Total Platform Revenue:
+                    </div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ fontWeight: "bold", color: "#6f42c1" }}
+                    >
+                      ${invoice?.nutalentFee ?? "0"}
+                    </div>
                   </div>
                 </div>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className={styles.card_desc}>Platform Fee:</div>
-                  <div
-                    className={styles.card_amount}
-                    style={{ color: "#dc3545" }}
-                  >
-                    ${invoice?.nutalentFee ?? "0"}
+              ) : (
+                // SuperAdmin sees PARTNER invoice breakdown
+                <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>Partner Payout Amount:</div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ color: "#28a745", fontWeight: "bold" }}
+                    >
+                      ${invoice?.totalAmount ?? "0"}
+                    </div>
                   </div>
                 </div>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div className={styles.card_desc}>Partner Share:</div>
-                  <div
-                    className={styles.card_amount}
-                    style={{ color: "#28a745" }}
-                  >
-                    ${invoice?.totalAmount ?? "0"}
-                  </div>
-                </div>
-                <div className="d-flex justify-content-between align-items-center border-top pt-2">
-                  <div
-                    className={styles.card_desc}
-                    style={{ fontWeight: "bold" }}
-                  >
-                    Total Platform Revenue:
-                  </div>
-                  <div
-                    className={styles.card_amount}
-                    style={{ fontWeight: "bold", color: "#6f42c1" }}
-                  >
-                    ${invoice?.nutalentFee ?? "0"}
-                  </div>
-                </div>
-              </div>
+              )
             ) : (
               // Partner sees only their amount
               <div className="d-flex justify-content-end align-items-center gap-3 mt-2">
@@ -299,24 +379,38 @@ export const InvoiceById: React.FC = () => {
                 </div>
               </div>
             )}
-            {showActionButtons && (
+            {showAdminActionButtons && (
               <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
                 <Button
                   btnClass="actionBtnDanger"
                   label={
-                    loadingAction === "Decline"
-                      ? "Declining..."
-                      : "Decline Invoice"
+                    loadingAction === "Reject"
+                      ? "Rejecting..."
+                      : "Reject Invoice"
                   }
-                  onClick={() => handlePartnerAction("Decline")}
+                  onClick={() => handleAdminAction("Reject")}
                   disabled={isLoading}
                 />
                 <Button
                   btnClass="filledBtn"
                   label={
-                    loadingAction === "Pay" ? "Processing..." : "Accept Invoice"
+                    loadingAction === "Confirm" ? "Processing..." : "Accept Invoice"
                   }
-                  onClick={() => handlePartnerAction("Pay")}
+                  onClick={() => handleAdminAction("Confirm")}
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+            {showPayPartnerButton && (
+              <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
+                <Button
+                  btnClass="filledBtn"
+                  label={
+                    loadingAction === "PayPartner"
+                      ? "Processing..."
+                      : "Pay Partner Share"
+                  }
+                  onClick={handlePayPartner}
                   disabled={isLoading}
                 />
               </div>

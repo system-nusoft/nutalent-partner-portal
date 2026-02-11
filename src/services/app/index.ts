@@ -644,6 +644,38 @@ export class AppService extends HttpService {
       throw prepareErrorResponse(error);
     }
   };
+  fetchAdminInvoiceAction = async (
+    baseAuthUrl: string,
+    id: string,
+    data: any
+  ): Promise<any> => {
+    try {
+      const apiResponse = await this.patch(
+        `${baseAuthUrl}` + ENDPOINTS.ADMIN_INVOICE_ACTION(id),
+        data
+      );
+
+      return prepareResponseObject(apiResponse, RESPONSE_TYPES.SUCCESS);
+    } catch (error) {
+      throw prepareErrorResponse(error);
+    }
+  };
+  fetchAdminPayPartner = async (
+    baseAuthUrl: string,
+    id: string,
+    data: any
+  ): Promise<any> => {
+    try {
+      const apiResponse = await this.patch(
+        `${baseAuthUrl}` + ENDPOINTS.PATCH_INVOICE(id),
+        data
+      );
+
+      return prepareResponseObject(apiResponse, RESPONSE_TYPES.SUCCESS);
+    } catch (error) {
+      throw prepareErrorResponse(error);
+    }
+  };
   fetchGetInvoicesListing = async (
     baseAuthUrl: string,
     data: any
