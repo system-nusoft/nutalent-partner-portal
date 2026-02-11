@@ -128,6 +128,93 @@ export const invoicesFeatureSlice = createSlice({
         data: null,
       },
     }),
+    togglePartnerInvoiceAction: (state) => {
+      state.state.isLoading = true;
+    },
+    togglePartnerInvoiceActionSuccess: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: null,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
+    togglePartnerInvoiceActionFailure: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: action.payload?.message,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
+    toggleAdminInvoiceAction: (state) => {
+      state.state.isLoading = true;
+    },
+    toggleAdminInvoiceActionSuccess: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: null,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
+    toggleAdminInvoiceActionFailure: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: action.payload?.message,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
+    toggleAdminPayPartner: (state) => {
+      state.state.isLoading = true;
+    },
+    toggleAdminPayPartnerSuccess: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: null,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
+    toggleAdminPayPartnerFailure: (state, action) => ({
+      ...state,
+      state: {
+        ...state.state,
+        error: action.payload?.message,
+        isLoading: false,
+      },
+      apiStatus: {
+        ...state.apiStatus,
+        statusCode: action.payload?.statusCode,
+        statusText: action.payload?.statusText,
+      },
+    }),
   },
   // A "builder callback" function used to add more reducers
 });
@@ -143,5 +230,14 @@ export const {
   togglePatchInvoice,
   togglePatchInvoiceFailure,
   togglePatchInvoiceSuccess,
+  togglePartnerInvoiceAction,
+  togglePartnerInvoiceActionSuccess,
+  togglePartnerInvoiceActionFailure,
+  toggleAdminInvoiceAction,
+  toggleAdminInvoiceActionSuccess,
+  toggleAdminInvoiceActionFailure,
+  toggleAdminPayPartner,
+  toggleAdminPayPartnerSuccess,
+  toggleAdminPayPartnerFailure,
 } = invoicesFeatureSlice.actions;
 export const invoicesFeatureReducer = invoicesFeatureSlice.reducer;

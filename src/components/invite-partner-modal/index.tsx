@@ -85,6 +85,15 @@ const InvitePartnerModal = forwardRef(({ page, search }: props, ref: any) => {
             },
           ]}
         />
+        <ChaiInput
+          name="marginMultiplier"
+          inputType="number"
+          label={t("input.marginMultiplier")}
+          placeholder={t("placeholder.marginMultiplier")}
+          rules={[
+            { message: t("error.marginMultiplierRequired"), required: true },
+          ]}
+        />
       </Form>
     </Modal>
   );

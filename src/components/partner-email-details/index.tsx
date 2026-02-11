@@ -62,6 +62,7 @@ const PartnerEmailDetails = ({}) => {
       form.setFieldsValue({
         companyName: partnerDetails?.companyName,
         onboardingDate: partnerDetails?.onboardingDate,
+        recoveryEmail: partnerDetails?.recoveryEmail,
       });
       setImage(partnerDetails?.companyLogo);
     }
@@ -78,8 +79,10 @@ const PartnerEmailDetails = ({}) => {
       const reqData: {
         companyName: string;
         companyLogo?: string | null;
+        recoveryEmail?: string;
       } = {
         companyName,
+        recoveryEmail: e.recoveryEmail,
       };
 
       if (image) {
@@ -156,7 +159,11 @@ const PartnerEmailDetails = ({}) => {
             />
           </Col>
           <Col span={24}>
-            <ChaiInput label={t("input.recoveryEmail")} disable name="email" />
+            <ChaiInput
+              label={t("input.recoveryEmail")}
+              disable
+              name="recoveryEmail"
+            />
           </Col>
         </Row>
         <RemovePictureConfirmModal

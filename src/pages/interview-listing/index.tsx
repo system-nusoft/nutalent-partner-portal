@@ -41,7 +41,7 @@ export const InterviewListing: React.FC = () => {
 
       render: (
         name: string,
-        record: { profilePicture: string; resourceLastName: string }
+        record: { profilePicture: string; resourceLastName: string },
       ) => (
         <span>
           <Avatar>
@@ -51,18 +51,25 @@ export const InterviewListing: React.FC = () => {
               name?.charAt(0)
             )}
           </Avatar>{" "}
-          {name + record.resourceLastName}
+          {record?.resourceLastName
+            ? `${name} ${record.resourceLastName}`
+            : name}
         </span>
       ),
     },
     {
       title: t("table.column.userName"),
-      dataIndex: "userNames",
-      key: "userNames",
+      dataIndex: "userFirstName",
+      key: "userFirstName",
 
-      render: (name: [{ firstName: string; lastName: string }]) => (
+      render: (
+        _: string,
+        record: { userFirstName: string; userLastName: string },
+      ) => (
         <span>
-          {Array.isArray(name) && name[0]?.firstName ? name[0]?.firstName : "-"}
+          {record?.userFirstName && record?.userLastName
+            ? `${record.userFirstName} ${record.userLastName}`
+            : "-"}
         </span>
       ),
     },
@@ -156,7 +163,7 @@ export const InterviewListing: React.FC = () => {
         cbSuccess: () => {
           setPage(e);
         },
-      })
+      }),
     );
   };
 
@@ -176,7 +183,7 @@ export const InterviewListing: React.FC = () => {
         cbSuccess: () => {
           setPage(1);
         },
-      })
+      }),
     );
   };
 
@@ -220,7 +227,7 @@ export const InterviewListing: React.FC = () => {
           setPage(1);
           setFilterOption(val);
         },
-      })
+      }),
     );
   };
 

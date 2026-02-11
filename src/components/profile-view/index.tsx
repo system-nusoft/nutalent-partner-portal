@@ -92,11 +92,11 @@ const ProfileView: React.FC = () => {
 
         if (match[2]) {
           parts.push(
-            <strong key={`bold-${index}-${partIndex++}`}>{match[2]}</strong>
+            <strong key={`bold-${index}-${partIndex++}`}>{match[2]}</strong>,
           );
         } else if (match[3]) {
           parts.push(
-            <em key={`italic-${index}-${partIndex++}`}>{match[3]}</em>
+            <em key={`italic-${index}-${partIndex++}`}>{match[3]}</em>,
           );
         }
 
@@ -113,14 +113,31 @@ const ProfileView: React.FC = () => {
             <span key={`text-${index}-${i}`}>{part}</span>
           ) : (
             part
-          )
-        )
+          ),
+        ),
       );
 
       result.push(<div key={`line-${index}`}>{content}</div>);
     });
 
     return result;
+  };
+
+  const renderInterviewSlotTag = () => {
+    const slots = profile?.interviewTimeSlots;
+    if (!Array.isArray(slots) || slots.length === 0) {
+      return <RoundTag text={t("tag.noInterviewsScheduled")} color="grey" />;
+    }
+    const formatted = slots
+      .filter((s: any) => s.startTime && s.endTime)
+      .map((s: any) => `${s.startTime} - ${s.endTime}`);
+
+    return (
+      <RoundTag
+        text={t("tag.scheduledInterviewSlot", { slots: formatted.join(", ") })}
+        color="blue"
+      />
+    );
   };
 
   return (
@@ -176,6 +193,7 @@ const ProfileView: React.FC = () => {
               />
             )}
           </Flex>
+          <Flex gap={12}>{renderInterviewSlotTag()}</Flex>
 
           {transparentCard({
             heading: t("heading.bio"),

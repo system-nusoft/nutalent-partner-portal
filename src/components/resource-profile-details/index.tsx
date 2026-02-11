@@ -51,7 +51,7 @@ const ResourceProfileDetails = ({ onSuccess }: props) => {
         RequestAppAction.handleGetResourceById({
           id: id,
           cbSuccess: () => {},
-        })
+        }),
       );
     }
   }, []);
@@ -142,7 +142,7 @@ const ResourceProfileDetails = ({ onSuccess }: props) => {
           current={currentTab}
           items={[
             {
-              title: "Personal info",
+              title: "Personal Info *",
 
               onClick: () => onChange(0),
 
@@ -192,7 +192,7 @@ const ResourceProfileDetails = ({ onSuccess }: props) => {
               ),
             },
             {
-              title: "Cost & availablity",
+              title: "Cost & Availablity",
               onClick: () => onChange(4),
               className: "cursor-pointer",
               icon: (

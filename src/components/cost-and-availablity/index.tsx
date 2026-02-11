@@ -81,14 +81,14 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
 
   const createIsoString = (
     timeString: string, // e.g., "10:56 AM"
-    selectedTimeZone: string
+    selectedTimeZone: string,
   ) => {
     // Parse the time and date together in the selected timezone
 
     const isoString = dayjs.tz(
       `${dayjs().format("YYYY-MM-DD")} ${timeString}`,
       "YYYY-MM-DD hh:mm A",
-      selectedTimeZone
+      selectedTimeZone,
     );
     return isoString;
   };
@@ -100,14 +100,14 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
       const days = Interview?.days;
       form.setFieldsValue({
         availability: availableFrom ? dayjs(availableFrom) : null,
-        rate: hourlyRate,
+        rate: hourlyRate ?? 0,
         timeSlot:
           Interview?.startTime && Interview?.endTime
             ? [dayjs(Interview?.startTime), dayjs(Interview?.endTime)]
             : null,
-        duration: Interview?.duration,
+        duration: Interview?.duration ?? interviewLimits[0],
         days: days ? days?.split(", ").map((day: string) => day.trim()) : null,
-        timeZone: Interview?.timeZone,
+        timeZone: Interview?.timeZone ?? dayjs.tz.guess(),
       });
 
       if (Array.isArray(interviewTimeSlots)) {
@@ -137,7 +137,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
           RequestAppAction.handleGetTimeSlots({
             id: resourceData?.id,
             data: reqData,
-          })
+          }),
         );
       }
     }
@@ -177,10 +177,10 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
                     onSuccess();
                   }, 100);
                 },
-              })
+              }),
             );
           },
-        })
+        }),
       );
     } else {
       Notification({
@@ -227,7 +227,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
     }
 
     const hasNullValue = Object.values(reqData).some(
-      (value) => value === null || value === undefined
+      (value) => value === null || value === undefined,
     );
 
     if (hasNullValue) {
@@ -242,7 +242,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
               setSelectedTimeSlots(res?.data);
             }
           },
-        })
+        }),
       );
     }
   };
@@ -256,7 +256,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
   }) => {
     if (Array.isArray(selectedTimeSlots) && selectedTimeSlots?.length > 0) {
       const index = selectedTimeSlots.findIndex(
-        (item) => item.startTime === startTime && item.endTime === endTime
+        (item) => item.startTime === startTime && item.endTime === endTime,
       );
 
       if (index !== -1) {
@@ -279,7 +279,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
     return currentDate
       ? dayjs(currentDate).isBefore(
           dayjs(new Date()).subtract(-1, "day"),
-          "day"
+          "day",
         )
       : false;
   };
@@ -331,7 +331,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
                             validator: (_: unknown, value: string) => {
                               if (value && Number(value) === 0) {
                                 return Promise.reject(
-                                  new Error(t("error.rateCannotBeZero"))
+                                  new Error(t("error.rateCannotBeZero")),
                                 );
                               }
                               return Promise.resolve();
@@ -485,7 +485,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
                                     selectedTimeSlots?.some(
                                       (i) =>
                                         i.startTime === val?.startTime &&
-                                        i.endTime === val?.endTime
+                                        i.endTime === val?.endTime,
                                     )
                                       ? "green"
                                       : "default"
@@ -509,7 +509,7 @@ const CostAndAvailibilty = ({ onSuccess }: prop) => {
                                     selectedTimeSlots?.some(
                                       (i) =>
                                         i.startTime === val?.startTime &&
-                                        i.endTime === val?.endTime
+                                        i.endTime === val?.endTime,
                                     )
                                       ? "green"
                                       : "default"

@@ -1,5 +1,5 @@
 import { RestOutlined } from "@ant-design/icons";
-import { Dropdown, Menu, Space, Spin } from "antd";
+import { Dropdown, Menu, Space, Spin, Tag } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Modal, SimpleTable, StatusTag } from "nusoft_components";
 import { useEffect, useRef, useState } from "react";
@@ -32,6 +32,7 @@ import {
 interface queryType {
   page: number;
   availabilityStatus?: STATUS;
+  isCurrentlyHired?: boolean;
   search?: string;
   onlyDraftProfiles?: boolean;
   partnerId?: string;
@@ -65,7 +66,7 @@ export const Resources: React.FC = () => {
     dispatch(toggleCreateResourceData(record?.id));
     setTimeout(() => {
       const path = generatePath(
-        PrivateRoutes.EDITRESOURCEBYID.replace(":id", record.id)
+        PrivateRoutes.EDITRESOURCEBYID.replace(":id", record.id),
       );
 
       navigate(path, {
@@ -87,13 +88,13 @@ export const Resources: React.FC = () => {
             toggleGetResourcesUpdate({
               ...data,
               items: updateResourceList(data, record?.id),
-            })
+            }),
           );
         },
         cbFailure: () => {
           setDeleteId(null);
         },
-      })
+      }),
     );
   };
 
@@ -150,12 +151,19 @@ export const Resources: React.FC = () => {
     {
       title: t("table.column.hiringStatus"),
 
-      key: "availabilityStatus",
-      dataIndex: "availabilityStatus",
-      render: (status: string) => {
+      key: "isCurrentlyHired",
+      dataIndex: "isCurrentlyHired",
+      render: (status: boolean, record: any) => {
         return (
           <Space size="small">
-            <StatusTag tags={status} />
+            {status ? (
+              <Tag color="blue">Hired</Tag>
+            ) : (
+              <StatusTag
+                tags={record?.availabilityStatus ?? "Available"}
+                color="green"
+              />
+            )}
           </Space>
         );
       },
@@ -183,7 +191,7 @@ export const Resources: React.FC = () => {
           isProfileCompleted: boolean;
           isActive: boolean;
           id: string;
-        }
+        },
       ) => {
         return (
           <Space size="small">
@@ -305,7 +313,11 @@ export const Resources: React.FC = () => {
     }
 
     if (filterOption !== t("status.all")) {
-      query["availabilityStatus"] = filterOption;
+      if (filterOption === STATUS.HIRED) {
+        query["isCurrentlyHired"] = true;
+      } else {
+        query["availabilityStatus"] = filterOption;
+      }
     }
 
     if (onlyDraftProfiles) {
@@ -320,7 +332,7 @@ export const Resources: React.FC = () => {
         cbSuccess: () => {
           setPage(e);
         },
-      })
+      }),
     );
   };
 
@@ -332,7 +344,11 @@ export const Resources: React.FC = () => {
     };
 
     if (filterOption !== t("status.all")) {
-      query["availabilityStatus"] = filterOption;
+      if (filterOption === STATUS.HIRED) {
+        query["isCurrentlyHired"] = true;
+      } else {
+        query["availabilityStatus"] = filterOption;
+      }
     }
 
     if (onlyDraftProfiles) {
@@ -350,7 +366,7 @@ export const Resources: React.FC = () => {
         cbSuccess: () => {
           setPage(1);
         },
-      })
+      }),
     );
   };
 
@@ -365,11 +381,11 @@ export const Resources: React.FC = () => {
             toggleGetResourcesUpdate({
               ...data,
               items: updateResourceStatus(data, id, value),
-            })
+            }),
           );
           restrictModalRef?.current?.closeModal();
         },
-      })
+      }),
     );
   };
 
@@ -386,7 +402,11 @@ export const Resources: React.FC = () => {
       page: 1,
     };
     if (status) {
-      query["availabilityStatus"] = status;
+      if (status === STATUS.HIRED) {
+        query["isCurrentlyHired"] = true;
+      } else {
+        query["availabilityStatus"] = status;
+      }
     }
 
     if (search?.length > 0) {
@@ -415,7 +435,11 @@ export const Resources: React.FC = () => {
     }
 
     if (filterOption !== t("status.all")) {
-      query["availabilityStatus"] = filterOption;
+      if (filterOption === STATUS.HIRED) {
+        query["isCurrentlyHired"] = true;
+      } else {
+        query["availabilityStatus"] = filterOption;
+      }
     }
 
     if (search?.length > 0) {
@@ -432,7 +456,7 @@ export const Resources: React.FC = () => {
         cbSuccess: () => {
           setPage(1);
         },
-      })
+      }),
     );
   };
 

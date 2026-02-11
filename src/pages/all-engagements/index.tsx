@@ -39,16 +39,28 @@ export const AllEngagements: React.FC = () => {
     dispatch(
       RequestAppAction.handleGetAllEngagements({
         data: { page: page, limit },
-      })
+      }),
     );
   }, []);
 
   const columns: any = [
     {
-      title: t("table.column.name"),
+      title: "Resource Name",
+      dataIndex: "resource",
+      key: "resource",
+      render: (val: any) =>
+        val?.firstName || val?.lastName
+          ? `${val.firstName ?? ''} ${val.lastName ?? ''}`
+          : "-",
+    },
+    {
+      title: "Employer Name",
       dataIndex: "endUser",
       key: "endUser",
-      render: (val: any) => val?.firstName ?? "-",
+      render: (val: any) =>
+        val?.firstName || val?.lastName
+          ? `${val.firstName ?? ''} ${val.lastName ?? ''}`
+          : "-",
     },
     {
       title: t("table.column.projectKickOff"),
@@ -83,7 +95,7 @@ export const AllEngagements: React.FC = () => {
       key: "action",
       render: (
         _: any,
-        obj: { id: string; hiringStatus: ENGAGEMENTS_STATUS }
+        obj: { id: string; hiringStatus: ENGAGEMENTS_STATUS },
       ) => (
         <div className="d-flex align-items-center">
           <Button
@@ -99,10 +111,10 @@ export const AllEngagements: React.FC = () => {
 
   const navigateToTimesheet = (
     engagementId: string,
-    status: ENGAGEMENTS_STATUS
+    status: ENGAGEMENTS_STATUS,
   ) => {
     const path = ROUTES.VIEW_TIMESHEET_ENGAGEMENT.concat(
-      `?engId=${engagementId}&status=${status}`
+      `?engId=${engagementId}&status=${status}`,
     );
     navigate(path, { state: engagementId });
   };
@@ -124,7 +136,7 @@ export const AllEngagements: React.FC = () => {
         cbSuccess: () => {
           setPage(e);
         },
-      })
+      }),
     );
   };
   const [filterOption, setFilterOption] = useState<any>(t("status.all"));
@@ -157,7 +169,7 @@ export const AllEngagements: React.FC = () => {
         cbSuccess: () => {
           if (func) func();
         },
-      })
+      }),
     );
   };
 

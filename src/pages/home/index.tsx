@@ -134,9 +134,9 @@ export const HomePage: React.FC = () => {
         ],
       },
       yaxis: {
-        max: 100,
+        max: 10000,
         min: 0,
-        stepSize: 20,
+        stepSize: 2000,
       },
       legend: {
         position: "top",
@@ -157,16 +157,27 @@ export const HomePage: React.FC = () => {
 
   const cards = [
     {
+      name: isPartner()
+        ? t("heading.totalResources")
+        : t("heading.totalRevenue"),
+      des: t("text.allTime"),
+      value: isPartner()
+        ? (dashboardPartnerData?.totalResources ?? 0)
+        : t("common.currencySign") + "" + (dashboardData?.totalRevenue ?? 0),
+    },
+    {
       name: t("heading.totalResources"),
       des: t("text.allTime"),
-      value: isPartner() ? dashboardPartnerData?.totalResources ?? 0 : 0,
+      value: isPartner()
+        ? (dashboardPartnerData?.totalResources ?? 0)
+        : (dashboardData?.totalResources ?? 0),
     },
     {
       name: t("heading.totalHiredResources"),
       des: t("text.allTime"),
       value: isPartner()
-        ? dashboardPartnerData?.totalHiredResources?.totalHiredResources ?? 0
-        : 0,
+        ? (dashboardPartnerData?.totalHiredResources?.totalHiredResources ?? 0)
+        : (dashboardData?.totalHiredResources ?? 0),
     },
     {
       name: isPartner()
@@ -178,21 +189,21 @@ export const HomePage: React.FC = () => {
           (dashboardPartnerData?.pendingInvoicesAmount
             ? dashboardPartnerData?.pendingInvoicesAmount
             : 0)
-        : dashboardData?.totalPartners ?? 0,
+        : (dashboardData?.totalPartners ?? 0),
     },
     {
       name: isPartner()
         ? t("heading.pendingTimesheet")
         : t("heading.totalActiveEngagements"),
       value: isPartner()
-        ? dashboardPartnerData?.pendingTimesheets ?? 0
-        : dashboardData?.totalActiveEngagements ?? 0,
+        ? (dashboardPartnerData?.pendingTimesheets ?? 0)
+        : (dashboardData?.totalActiveEngagements ?? 0),
     },
     {
       name: isPartner() ? t("heading.totalHoursWorked") : t("heading.endUsers"),
       value: isPartner()
         ? `${dashboardPartnerData?.totalHoursWorked ?? 0}h`
-        : dashboardData?.totalUsers ?? 0,
+        : (dashboardData?.totalUsers ?? 0),
       icon: <InterviewWidgetIcon />,
     },
   ];
@@ -204,12 +215,12 @@ export const HomePage: React.FC = () => {
     dispatch(
       RequestAppAction.handleGetInterviewListing({
         data: { page: 1, limit: limit, partnerId: user?.partnerId },
-      })
+      }),
     );
     dispatch(
       RequestAppAction.handleGetInvoiceList({
         query: { page: 1, limit: limit, payoutStatus: INVOICES_STATUS.PENDING },
-      })
+      }),
     );
   }, []);
   const InvoicesColumns: any = [
@@ -417,7 +428,7 @@ export const HomePage: React.FC = () => {
       const date = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth() - i,
-        1
+        1,
       );
       months.push(date.toLocaleString("default", { month: "short" }));
     }
@@ -433,7 +444,7 @@ export const HomePage: React.FC = () => {
       daysArray.push(
         `${date.getDate()} ${date.toLocaleString("default", {
           month: "short",
-        })}`
+        })}`,
       );
     }
     return daysArray;
@@ -607,28 +618,31 @@ export const HomePage: React.FC = () => {
       endDate: val, // Current date as ISO string
     };
 
-    dispatch(
-      RequestAppAction.handleGetDashboardResourceHoursChart({
-        id: user?.partnerId,
-        data: { startDate: range.endDate, endDate: range.startDate },
-        cbSuccess: (res) => {
-          if (res?.labels?.length > 0) {
-            setTotalHoursChartData((pre) => ({
-              ...pre,
-              series: res?.values?.length > 0 ? res?.values : [100],
-              options: {
-                ...pre.options,
-                tooltip: { enabled: true },
-                labels: res?.labels?.length > 0 ? res?.labels : [""],
-              },
-            }));
-            setTopPerformersNotFound(false);
-          } else {
-            setTopPerformersNotFound(true);
-          }
-        },
-      })
-    );
+    // Only call resource hours API for partners
+    if (isPartner() && user?.partnerId) {
+      dispatch(
+        RequestAppAction.handleGetDashboardResourceHoursChart({
+          id: user?.partnerId,
+          data: { startDate: range.endDate, endDate: range.startDate },
+          cbSuccess: (res) => {
+            if (res?.labels?.length > 0) {
+              setTotalHoursChartData((pre) => ({
+                ...pre,
+                series: res?.values?.length > 0 ? res?.values : [100],
+                options: {
+                  ...pre.options,
+                  tooltip: { enabled: true },
+                  labels: res?.labels?.length > 0 ? res?.labels : [""],
+                },
+              }));
+              setTopPerformersNotFound(false);
+            } else {
+              setTopPerformersNotFound(true);
+            }
+          },
+        }),
+      );
+    }
   };
 
   const [resourceBreakdownNotFound, setResourceBreakdownNotFound] =
@@ -636,7 +650,7 @@ export const HomePage: React.FC = () => {
   const updateResourceBreakdownChart = () => {
     const values = dashboardPartnerData?.resourceBreakdownPieChart?.values;
     const labels = dashboardPartnerData?.resourceBreakdownPieChart?.labels;
-    if (labels?.legend?.length > 0) {
+    if (Array.isArray(labels) && labels?.length > 0) {
       if (Array.isArray(values) && values?.length > 0) {
         setBarChartData((pre) => ({
           ...pre,
@@ -654,6 +668,9 @@ export const HomePage: React.FC = () => {
     }
   };
   const switchTotalHoursTab = (key: string) => {
+    // Only switch total hours tabs for partners
+    if (!isPartner()) return;
+
     switch (key) {
       case "1":
         updateTotalHoursChart(createDate(7, "day"));
@@ -723,7 +740,7 @@ export const HomePage: React.FC = () => {
           endTime: range.endDate,
           partnerId: user?.partnerId,
         },
-      })
+      }),
     );
   };
   useEffect(() => {
@@ -732,7 +749,7 @@ export const HomePage: React.FC = () => {
 
   const handleTimelineChange = (
     key: string,
-    chartData: { name: string; data: number[] }
+    chartData: { name: string; data: number[] },
   ) => {
     let newCategories: string[] = [];
 
@@ -770,6 +787,11 @@ export const HomePage: React.FC = () => {
   };
 
   const fetchRevenueChart = (key: string) => {
+    // Don't fetch if user data is not available
+    if (!user) {
+      return;
+    }
+
     let range = {
       startDate: new Date().toISOString(), // Current date as ISO string
       endDate: new Date().toISOString(), // Current date as ISO string
@@ -796,7 +818,9 @@ export const HomePage: React.FC = () => {
       default:
         break;
     }
-    if (user?.partnerId) {
+
+    if (isPartner() && user?.partnerId) {
+      // Partner-specific revenue data
       dispatch(
         RequestAppAction.handleGetDashboardRevenueChart({
           id: user?.partnerId,
@@ -804,21 +828,36 @@ export const HomePage: React.FC = () => {
           cbSuccess: (res) => {
             handleTimelineChange(key, res);
           },
-        })
+        }),
       );
+    } else if (!isPartner()) {
+      // SuperAdmin revenue data (platform-wide)
+      dispatch(
+        RequestAppAction.handleGetAdminDashboardRevenueChart({
+          data: { startDate: range.endDate, endDate: range.startDate },
+          cbSuccess: (res) => {
+            handleTimelineChange(key, res);
+          },
+        }),
+      );
+    } else {
     }
   };
 
   useEffect(() => {
-    if (user?.partnerId) {
+    if (isPartner()) {
+      // Partner-specific data fetching
       fetchRevenueChart("1");
       switchTotalHoursTab("1");
       dispatch(
         RequestAppAction.handleGetDashboardTimesheetList({
           id: user?.partnerId,
           data: { status: TIMESHEET_STATUS.PENDING_APPROVAL },
-        })
+        }),
       );
+    } else {
+      // SuperAdmin data fetching
+      fetchRevenueChart("1");
     }
   }, [user]);
 
@@ -834,7 +873,7 @@ export const HomePage: React.FC = () => {
         isFetchingTimesheet || isFetchingInvoices ? (
           <Skeleton.Input active block />
         ) : (
-          col.render?.(value, record, index) ?? value
+          (col.render?.(value, record, index) ?? value)
         ),
     }));
   };
@@ -845,7 +884,7 @@ export const HomePage: React.FC = () => {
         isFetchingInterview ? (
           <Skeleton.Input active block />
         ) : (
-          col.render?.(value, record, index) ?? value
+          (col.render?.(value, record, index) ?? value)
         ),
     }));
   };
@@ -910,6 +949,9 @@ export const HomePage: React.FC = () => {
                 defaultActiveKey="1"
                 items={items}
                 onChange={(i: any) => {
+                  // Only fetch revenue chart if user data is available
+                  if (!user) return;
+
                   fetchRevenueChart(i);
                 }}
               />
@@ -989,8 +1031,8 @@ export const HomePage: React.FC = () => {
                 isFetchingInvoices || isFetchingTimesheet
                   ? Array(5).fill({})
                   : selecetedTable === "2"
-                  ? updatedTimesheetList
-                  : updatedInvoicesList
+                    ? updatedTimesheetList
+                    : updatedInvoicesList
               }
             />
           </div>

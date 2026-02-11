@@ -9,6 +9,7 @@ export enum STATUS {
   AVAILABLE = "Available",
   BUSY = "Busy",
   VACATUION = "Vacation",
+  HIRED = "Hired",
 }
 
 export enum USER_RESOURCE_FILTER {
@@ -45,4 +46,15 @@ export enum INTERVIEW_STATUS {
 export enum ENGAGEMENTS_STATUS {
   ACTIVE = "Active",
   ENDED = "Closed",
+}
+
+export enum PAYMENT_STATUS {
+  CONFIRMATION_PENDING = "Confirmation Pending",
+  PAID = "Paid",
+  PENDING = "Pending",
+}
+
+export enum INVOICE_TYPE {
+  CLIENT = "CLIENT",
+  PARTNER = "PARTNER",
 }

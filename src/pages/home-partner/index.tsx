@@ -43,7 +43,7 @@ export const HomePagePartner: React.FC = () => {
             x: month,
             y: total,
             countByDomain: countByDomain,
-          })
+          }),
         ),
 
         fill: 1,
@@ -68,7 +68,7 @@ export const HomePagePartner: React.FC = () => {
     {
       name: t("heading.totalHired"),
       des: t("text.currently"),
-      value: 0,
+      value: dashboardData?.totalHiredResources,
     },
     {
       name: t("heading.totalActiveEngagements"),

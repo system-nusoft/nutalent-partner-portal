@@ -1,11 +1,14 @@
 import { ExportOutlined } from "@ant-design/icons";
 import { Spin, Table, Tag, Tooltip } from "antd";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect } from "react";
+import { Button, StatusTag } from "nusoft_components";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "src/constants/navigation-routes";
+import { INVOICE_TYPE, PAYMENT_STATUS } from "src/constants/roles";
+import { isPartner, isSuperAdmin } from "src/services/user-type";
 import { getInvoicesData } from "src/store/selectors/features/invoices-selector";
 import RequestAppAction from "src/store/slices/app-actions";
 import { colors } from "src/styles/colors";
@@ -21,6 +24,134 @@ export const InvoiceById: React.FC = () => {
   const pathname = location.pathname;
   const match = pathname.match(/invoices\/([^/]+)/);
   const id = match ? match[1] : null;
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<"Pay" | "Decline" | "Confirm" | "Reject" | "PayPartner" | null>(
+    null,
+  );
+  const isPartnerRole = isPartner();
+  const isAdminRole = isSuperAdmin();
+
+  const handlePartnerAction = (action: "Pay" | "Decline") => {
+    if (!id) return;
+    setIsLoading(true);
+    setLoadingAction(action);
+    dispatch(
+      RequestAppAction.handlePartnerInvoiceAction({
+        id,
+        data: { action },
+        cbSuccess: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+          dispatch(
+            RequestAppAction.handleGetInvoiceById({
+              id,
+            }),
+          );
+        },
+        cbFailure: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+        },
+      }),
+    );
+  };
+
+  const handleAdminAction = (action: "Confirm" | "Reject") => {
+    if (!id) return;
+    setIsLoading(true);
+    setLoadingAction(action);
+    dispatch(
+      RequestAppAction.handleAdminInvoiceAction({
+        id,
+        data: { action },
+        cbSuccess: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+          dispatch(
+            RequestAppAction.handleGetInvoiceById({
+              id,
+            }),
+          );
+        },
+        cbFailure: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+        },
+      }),
+    );
+  };
+
+  const handlePayPartner = () => {
+    if (!id) return;
+    setIsLoading(true);
+    setLoadingAction("PayPartner");
+    dispatch(
+      RequestAppAction.handleAdminPayPartner({
+        id,
+        data: { status: "Paid" },
+        cbSuccess: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+          dispatch(
+            RequestAppAction.handleGetInvoiceById({
+              id,
+            }),
+          );
+        },
+        cbFailure: () => {
+          setIsLoading(false);
+          setLoadingAction(null);
+        },
+      }),
+    );
+  };
+
+  const getStatusDisplay = () => {
+    if (isAdminRole) {
+      // SuperAdmin sees status based on invoice type
+      if (invoice?.invoiceType === INVOICE_TYPE.CLIENT) {
+        return (
+          <div className="d-flex flex-column gap-2">
+            <div>
+              <small className="text-muted">{t("heading.clientPayment")}</small>
+              <StatusTag tags={invoice?.paymentStatus || PAYMENT_STATUS.PENDING} />
+            </div>
+            <div>
+              <small className="text-muted">{t("heading.partnerPayout")}</small>
+              <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />
+            </div>
+          </div>
+        );
+      } else {
+        return (
+          <div className="d-flex flex-column gap-2">
+            <div>
+              <small className="text-muted">{t("heading.partnerPayout")}</small>
+              <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />
+            </div>
+          </div>
+        );
+      }
+    } else if (isPartnerRole) {
+      // Partner sees only payout status
+      return (
+        <div>
+          <small className="text-muted">{t("heading.status")}</small>
+          <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />
+        </div>
+      );
+    }
+    return <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />;
+  };
+
+  const showPartnerActionButtons =
+    isPartnerRole && invoice?.paymentStatus === PAYMENT_STATUS.CONFIRMATION_PENDING;
+
+  const showAdminActionButtons =
+    isAdminRole && invoice?.invoiceType === INVOICE_TYPE.CLIENT && invoice?.paymentStatus === PAYMENT_STATUS.CONFIRMATION_PENDING;
+
+  const showPayPartnerButton =
+    isAdminRole && invoice?.invoiceType === INVOICE_TYPE.CLIENT && invoice?.paymentStatus === PAYMENT_STATUS.PAID && invoice?.payoutStatus === PAYMENT_STATUS.PENDING;
 
   useEffect(() => {
     if (id)
@@ -30,7 +161,7 @@ export const InvoiceById: React.FC = () => {
           cbFailure: () => {
             // navigate(ROUTES.INVOICES);
           },
-        })
+        }),
       );
   }, []);
 
@@ -47,7 +178,7 @@ export const InvoiceById: React.FC = () => {
           resourceId: string;
           engagementId: string;
           id: string;
-        }
+        },
       ) => {
         const date = new Date(name);
         return (
@@ -70,7 +201,7 @@ export const InvoiceById: React.FC = () => {
                     navigate(
                       ROUTES.VIEW_TIMESHEET_BY_ID.replace(
                         ":id",
-                        invoice?.Engagements?.resourceId
+                        invoice?.Engagements?.resourceId,
                       )
                         .replace(":timeId", record?.id)
                         .concat(`?engId=${record?.engagementId}`),
@@ -79,7 +210,7 @@ export const InvoiceById: React.FC = () => {
                           startDate: record?.startDate,
                           endDate: record?.endDate,
                         },
-                      }
+                      },
                     );
                   }
                 }}
@@ -139,7 +270,7 @@ export const InvoiceById: React.FC = () => {
                         invoice?.Timesheet?.length > 0
                           ? invoice?.Timesheet[0]?.startDate
                           : new Date()
-                      }`
+                      }`,
                     ), // update in future
                     endDate: returnDateMonthAndYear(
                       `${
@@ -148,21 +279,19 @@ export const InvoiceById: React.FC = () => {
                           ? invoice?.Timesheet[invoice?.Timesheet?.length - 1]
                               ?.endDate
                           : new Date()
-                      }`
+                      }`,
                     ), // update in future
                   })}
                 </div>
               </div>
-              <div>
-                <Tag title="pending" color="pending" />
-              </div>
+              <div>{getStatusDisplay()}</div>
             </div>
             <div className="d-flex gap-5">
               <div className="d-flex flex-column">
                 <div className={styles.card_desc}>{t("heading.issueDate")}</div>
                 <div className={styles.card_date}>
                   {returnDateMonthAndYear(
-                    `${invoice?.issueDate ?? new Date()}`
+                    `${invoice?.issueDate ?? new Date()}`,
                   )}
                 </div>
               </div>
@@ -183,28 +312,110 @@ export const InvoiceById: React.FC = () => {
                 pagination={false}
               />
             </div>
-            <div className="d-flex justify-content-end align-items-center gap-3 mt-2">
-              <div className={styles.card_desc}>
-                {t("heading.totalAmount")}:
+            {isAdminRole ? (
+              invoice?.invoiceType === INVOICE_TYPE.CLIENT ? (
+                // SuperAdmin sees CLIENT invoice breakdown
+                <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>{t("heading.endUserPaid")}</div>
+                    <div className={styles.card_amount}>
+                      ${invoice?.netAmount ?? "0"}
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>{t("heading.platformFee")}</div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ color: colors.danger }}
+                    >
+                      ${invoice?.nutalentFee ?? "0"}
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>{t("heading.partnerShare")}</div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ color: colors.partnerShare }}
+                    >
+                      ${invoice?.totalAmount ?? "0"}
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-between align-items-center border-top pt-2">
+                    <div
+                      className={styles.card_desc}
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {t("heading.totalPlatformRevenue")}
+                    </div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ fontWeight: "bold", color: colors.purple }}
+                    >
+                      ${invoice?.nutalentFee ?? "0"}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // SuperAdmin sees PARTNER invoice breakdown
+                <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div className={styles.card_desc}>{t("heading.partnerPayoutAmount")}</div>
+                    <div
+                      className={styles.card_amount}
+                      style={{ color: colors.partnerShare, fontWeight: "bold" }}
+                    >
+                      ${invoice?.totalAmount ?? "0"}
+                    </div>
+                  </div>
+                </div>
+              )
+            ) : (
+              // Partner sees only their amount
+              <div className="d-flex justify-content-end align-items-center gap-3 mt-2">
+                <div className={styles.card_desc}>
+                  {t("heading.totalAmount")}:
+                </div>
+                <div className={styles.card_amount}>
+                  ${invoice?.totalAmount ?? "0"}
+                </div>
               </div>
-              <div className={styles.card_amount}>
-                ${invoice?.totalAmount ?? "0"}
+            )}
+            {showAdminActionButtons && (
+              <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
+                <Button
+                  btnClass="actionBtnDanger"
+                  label={
+                    loadingAction === "Reject"
+                      ? t("button.rejecting")
+                      : t("button.rejectInvoice")
+                  }
+                  onClick={() => handleAdminAction("Reject")}
+                  disabled={isLoading}
+                />
+                <Button
+                  btnClass="filledBtn"
+                  label={
+                    loadingAction === "Confirm" ? t("button.processing") : t("button.acceptInvoice")
+                  }
+                  onClick={() => handleAdminAction("Confirm")}
+                  disabled={isLoading}
+                />
               </div>
-            </div>
-            {/* <div className="d-flex justify-content-end align-items-center gap-3 ">
-              <div className={styles.card_desc}>
-                {t("heading.nuTalentFee")}:
+            )}
+            {showPayPartnerButton && (
+              <div className="d-flex justify-content-end align-items-center gap-3 mt-3">
+                <Button
+                  btnClass="filledBtn"
+                  label={
+                    loadingAction === "PayPartner"
+                      ? t("button.processing")
+                      : t("button.payPartnerShare")
+                  }
+                  onClick={handlePayPartner}
+                  disabled={isLoading}
+                />
               </div>
-              <div className={styles.card_amount}>
-                ${invoice?.nutalentFee ?? "0"}
-              </div>
-            </div> */}
-            {/* <div className="d-flex justify-content-end align-items-center gap-3 ">
-              <div className={styles.card_desc}>{t("heading.employerAmount")}:</div>
-              <div className={styles.card_amount}>
-                ${invoice?.netAmount ?? "0"}
-              </div>
-            </div> */}
+            )}
           </div>
         </div>
       </div>

@@ -40,6 +40,7 @@ let currentPathName: any = null;
 export const DashboardPage: React.FC = () => {
   const [selectedPath, setSelectedPath] = useState<string[]>(["0"]);
   const [collapsed, setCollapsed] = useState(false);
+  const [loggedInUserPartner, setLoggedInUserPartner] = useState<any>(null);
   const { t } = useTranslation();
   const user: any = useSelector(getAuthenticationData);
   const location = useLocation();
@@ -181,6 +182,9 @@ export const DashboardPage: React.FC = () => {
             dispatch(
               RequestAppAction.handleGetPartner({
                 id: res?.partnerId,
+                cbSuccess: (partnerData) => {
+                  setLoggedInUserPartner(partnerData);
+                },
               })
             );
         },
@@ -258,7 +262,7 @@ export const DashboardPage: React.FC = () => {
       <AppHeader
         isAuthenticated={user ? true : false}
         logo={<LogoWhite />}
-        avatarImage={partner?.companyLogo}
+        avatarImage={loggedInUserPartner?.companyLogo}
         userName={user?.name ?? ""}
         isAdmin={user?.partnerId ? false : true}
       />
