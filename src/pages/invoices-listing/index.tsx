@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { limit } from "src/constants/end-points";
 import { ROUTES } from "src/constants/navigation-routes";
-import { INVOICES_STATUS, ROLES } from "src/constants/roles";
+import { INVOICE_TYPE, INVOICES_STATUS, ROLES } from "src/constants/roles";
 import { isSuperAdmin } from "src/services/user-type";
 import {
   getInvoicesList,
@@ -54,7 +54,7 @@ export const InvoicesListing: React.FC = () => {
       dataIndex: "invoiceNumber",
     },
     {
-      title: isAdmin ? "Amount" : t("table.column.payment"),
+      title: isAdmin ? t("table.column.amount") : t("table.column.payment"),
       key: "totalAmount",
       dataIndex: "totalAmount",
       render: (value: string) => `$${value}`,
@@ -62,18 +62,18 @@ export const InvoicesListing: React.FC = () => {
     ...(isAdmin
       ? [
           {
-            title: "Platform Fee",
+            title: t("table.column.platformFee"),
             key: "nutalentFee",
             dataIndex: "nutalentFee",
             render: (value: string, record: any) => 
-              record.invoiceType === "CLIENT" ? `$${value || 0}` : "-",
+              record.invoiceType === INVOICE_TYPE.CLIENT ? `$${value || 0}` : "-",
           },
           {
-            title: "Net Amount",
+            title: t("table.column.netAmount"),
             key: "netAmount",
             dataIndex: "netAmount",
             render: (value: string, record: any) => 
-              record.invoiceType === "CLIENT" ? `$${value || 0}` : "-",
+              record.invoiceType === INVOICE_TYPE.CLIENT ? `$${value || 0}` : "-",
           },
         ]
       : []),
@@ -118,7 +118,7 @@ export const InvoicesListing: React.FC = () => {
       key: "status",
       render: (_: undefined, record: any) => {
         if (isAdmin) {
-          if (record.invoiceType === "CLIENT") {
+          if (record.invoiceType === INVOICE_TYPE.CLIENT) {
             return (
               <div className="d-flex flex-column gap-1">
                 <div>
@@ -227,7 +227,7 @@ export const InvoicesListing: React.FC = () => {
       <div className="bg-white rounded-4 w-100 p-3 ">
         <div className="d-flex gap-5 align-content-center justify-content-start">
           <div className="d-flex gap-2 flex-column">
-            <div className={styles.card_mini_heading}>Pending Funds</div>
+            <div className={styles.card_mini_heading}>{t("heading.pendingFunds")}</div>
             <div className={styles.card_desc}>
               $
               {isAdmin
@@ -236,7 +236,7 @@ export const InvoicesListing: React.FC = () => {
             </div>
           </div>
           <div className="d-flex gap-2 border border-start ps-5 border-0 flex-column">
-            <div className={styles.card_mini_heading}>Received Funds</div>
+            <div className={styles.card_mini_heading}>{t("heading.receivedFunds")}</div>
             <div className={styles.card_desc}>
               $
               {isAdmin

@@ -47,3 +47,14 @@ export enum ENGAGEMENTS_STATUS {
   ACTIVE = "Active",
   ENDED = "Closed",
 }
+
+export enum PAYMENT_STATUS {
+  CONFIRMATION_PENDING = "Confirmation Pending",
+  PAID = "Paid",
+  PENDING = "Pending",
+}
+
+export enum INVOICE_TYPE {
+  CLIENT = "CLIENT",
+  PARTNER = "PARTNER",
+}

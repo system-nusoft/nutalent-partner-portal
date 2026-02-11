@@ -32,7 +32,10 @@ export const colors = {
   BorderGreen: "#8ddf4e",
   success: "#52c41a",
   skillsBlueBg: "#E6F4FF",
-  skillsBlueBorder: "#91CAFF"
+  skillsBlueBorder: "#91CAFF",
+  danger: "#dc3545",
+  partnerShare: "#28a745",
+  purple: "#6f42c1"
 };
 
 export const chartColorsList = [

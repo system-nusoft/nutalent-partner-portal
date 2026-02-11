@@ -50,7 +50,7 @@ export const AllEngagements: React.FC = () => {
       key: "resource",
       render: (val: any) =>
         val?.firstName || val?.lastName
-          ? `${val.firstName} ${val.lastName}`
+          ? `${val.firstName ?? ''} ${val.lastName ?? ''}`
           : "-",
     },
     {
@@ -59,7 +59,7 @@ export const AllEngagements: React.FC = () => {
       key: "endUser",
       render: (val: any) =>
         val?.firstName || val?.lastName
-          ? `${val.firstName} ${val.lastName}`
+          ? `${val.firstName ?? ''} ${val.lastName ?? ''}`
           : "-",
     },
     {

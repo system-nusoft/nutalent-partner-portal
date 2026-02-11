@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "src/constants/navigation-routes";
+import { INVOICE_TYPE, PAYMENT_STATUS } from "src/constants/roles";
 import { isPartner, isSuperAdmin } from "src/services/user-type";
 import { getInvoicesData } from "src/store/selectors/features/invoices-selector";
 import RequestAppAction from "src/store/slices/app-actions";
@@ -108,16 +109,16 @@ export const InvoiceById: React.FC = () => {
   const getStatusDisplay = () => {
     if (isAdminRole) {
       // SuperAdmin sees status based on invoice type
-      if (invoice?.invoiceType === "CLIENT") {
+      if (invoice?.invoiceType === INVOICE_TYPE.CLIENT) {
         return (
           <div className="d-flex flex-column gap-2">
             <div>
-              <small className="text-muted">Client Payment: </small>
-              <StatusTag tags={invoice?.paymentStatus || "Pending"} />
+              <small className="text-muted">{t("heading.clientPayment")}</small>
+              <StatusTag tags={invoice?.paymentStatus || PAYMENT_STATUS.PENDING} />
             </div>
             <div>
-              <small className="text-muted">Partner Payout: </small>
-              <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+              <small className="text-muted">{t("heading.partnerPayout")}</small>
+              <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />
             </div>
           </div>
         );
@@ -125,8 +126,8 @@ export const InvoiceById: React.FC = () => {
         return (
           <div className="d-flex flex-column gap-2">
             <div>
-              <small className="text-muted">Payout Status: </small>
-              <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+              <small className="text-muted">{t("heading.partnerPayout")}</small>
+              <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />
             </div>
           </div>
         );
@@ -135,22 +136,22 @@ export const InvoiceById: React.FC = () => {
       // Partner sees only payout status
       return (
         <div>
-          <small className="text-muted">Status: </small>
-          <StatusTag tags={invoice?.payoutStatus || "Pending"} />
+          <small className="text-muted">{t("heading.status")}</small>
+          <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />
         </div>
       );
     }
-    return <StatusTag tags={invoice?.payoutStatus || "Pending"} />;
+    return <StatusTag tags={invoice?.payoutStatus || PAYMENT_STATUS.PENDING} />;
   };
 
   const showPartnerActionButtons =
-    isPartnerRole && invoice?.paymentStatus === "Confirmation Pending";
+    isPartnerRole && invoice?.paymentStatus === PAYMENT_STATUS.CONFIRMATION_PENDING;
 
   const showAdminActionButtons =
-    isAdminRole && invoice?.invoiceType === "CLIENT" && invoice?.paymentStatus === "Confirmation Pending";
+    isAdminRole && invoice?.invoiceType === INVOICE_TYPE.CLIENT && invoice?.paymentStatus === PAYMENT_STATUS.CONFIRMATION_PENDING;
 
   const showPayPartnerButton =
-    isAdminRole && invoice?.invoiceType === "CLIENT" && invoice?.paymentStatus === "Paid" && invoice?.payoutStatus === "Pending";
+    isAdminRole && invoice?.invoiceType === INVOICE_TYPE.CLIENT && invoice?.paymentStatus === PAYMENT_STATUS.PAID && invoice?.payoutStatus === PAYMENT_STATUS.PENDING;
 
   useEffect(() => {
     if (id)
@@ -312,29 +313,29 @@ export const InvoiceById: React.FC = () => {
               />
             </div>
             {isAdminRole ? (
-              invoice?.invoiceType === "CLIENT" ? (
+              invoice?.invoiceType === INVOICE_TYPE.CLIENT ? (
                 // SuperAdmin sees CLIENT invoice breakdown
                 <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
                   <div className="d-flex justify-content-between align-items-center">
-                    <div className={styles.card_desc}>EndUser Paid:</div>
+                    <div className={styles.card_desc}>{t("heading.endUserPaid")}</div>
                     <div className={styles.card_amount}>
                       ${invoice?.netAmount ?? "0"}
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center">
-                    <div className={styles.card_desc}>Platform Fee:</div>
+                    <div className={styles.card_desc}>{t("heading.platformFee")}</div>
                     <div
                       className={styles.card_amount}
-                      style={{ color: "#dc3545" }}
+                      style={{ color: colors.danger }}
                     >
                       ${invoice?.nutalentFee ?? "0"}
                     </div>
                   </div>
                   <div className="d-flex justify-content-between align-items-center">
-                    <div className={styles.card_desc}>Partner Share:</div>
+                    <div className={styles.card_desc}>{t("heading.partnerShare")}</div>
                     <div
                       className={styles.card_amount}
-                      style={{ color: "#28a745" }}
+                      style={{ color: colors.partnerShare }}
                     >
                       ${invoice?.totalAmount ?? "0"}
                     </div>
@@ -344,11 +345,11 @@ export const InvoiceById: React.FC = () => {
                       className={styles.card_desc}
                       style={{ fontWeight: "bold" }}
                     >
-                      Total Platform Revenue:
+                      {t("heading.totalPlatformRevenue")}
                     </div>
                     <div
                       className={styles.card_amount}
-                      style={{ fontWeight: "bold", color: "#6f42c1" }}
+                      style={{ fontWeight: "bold", color: colors.purple }}
                     >
                       ${invoice?.nutalentFee ?? "0"}
                     </div>
@@ -358,10 +359,10 @@ export const InvoiceById: React.FC = () => {
                 // SuperAdmin sees PARTNER invoice breakdown
                 <div className="d-flex flex-column gap-3 mt-3 border-top pt-3">
                   <div className="d-flex justify-content-between align-items-center">
-                    <div className={styles.card_desc}>Partner Payout Amount:</div>
+                    <div className={styles.card_desc}>{t("heading.partnerPayoutAmount")}</div>
                     <div
                       className={styles.card_amount}
-                      style={{ color: "#28a745", fontWeight: "bold" }}
+                      style={{ color: colors.partnerShare, fontWeight: "bold" }}
                     >
                       ${invoice?.totalAmount ?? "0"}
                     </div>
@@ -385,8 +386,8 @@ export const InvoiceById: React.FC = () => {
                   btnClass="actionBtnDanger"
                   label={
                     loadingAction === "Reject"
-                      ? "Rejecting..."
-                      : "Reject Invoice"
+                      ? t("button.rejecting")
+                      : t("button.rejectInvoice")
                   }
                   onClick={() => handleAdminAction("Reject")}
                   disabled={isLoading}
@@ -394,7 +395,7 @@ export const InvoiceById: React.FC = () => {
                 <Button
                   btnClass="filledBtn"
                   label={
-                    loadingAction === "Confirm" ? "Processing..." : "Accept Invoice"
+                    loadingAction === "Confirm" ? t("button.processing") : t("button.acceptInvoice")
                   }
                   onClick={() => handleAdminAction("Confirm")}
                   disabled={isLoading}
@@ -407,8 +408,8 @@ export const InvoiceById: React.FC = () => {
                   btnClass="filledBtn"
                   label={
                     loadingAction === "PayPartner"
-                      ? "Processing..."
-                      : "Pay Partner Share"
+                      ? t("button.processing")
+                      : t("button.payPartnerShare")
                   }
                   onClick={handlePayPartner}
                   disabled={isLoading}

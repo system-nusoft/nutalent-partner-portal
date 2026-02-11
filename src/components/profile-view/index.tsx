@@ -126,7 +126,7 @@ const ProfileView: React.FC = () => {
   const renderInterviewSlotTag = () => {
     const slots = profile?.interviewTimeSlots;
     if (!Array.isArray(slots) || slots.length === 0) {
-      return <RoundTag text={t("No Interviews Scheduled")} color="grey" />;
+      return <RoundTag text={t("tag.noInterviewsScheduled")} color="grey" />;
     }
     const formatted = slots
       .filter((s: any) => s.startTime && s.endTime)
@@ -134,7 +134,7 @@ const ProfileView: React.FC = () => {
 
     return (
       <RoundTag
-        text={`Scheduled Interview Time Slot: ${formatted.join(", ")}`}
+        text={t("tag.scheduledInterviewSlot", { slots: formatted.join(", ") })}
         color="blue"
       />
     );

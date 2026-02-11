@@ -92,10 +92,25 @@
     "saveAsDraft": "Save as Draft",
     "yes": "Yes",
     "viewProfile": "View Profile",
-    "endEngagement": "End Engagement"
+    "endEngagement": "End Engagement",
+    "rejectInvoice": "Reject Invoice",
+    "rejecting": "Rejecting...",
+    "acceptInvoice": "Accept Invoice",
+    "processing": "Processing...",
+    "payPartnerShare": "Pay Partner Share"
   },
   "heading": {
     "linkExpired": "Your Link has Expired",
+    "endUserPaid": "EndUser Paid:",
+    "platformFee": "Platform Fee:",
+    "partnerShare": "Partner Share:",
+    "totalPlatformRevenue": "Total Platform Revenue:",
+    "partnerPayoutAmount": "Partner Payout Amount:",
+    "pendingFunds": "Pending Funds",
+    "receivedFunds": "Received Funds",
+    "clientPayment": "Client Payment: ",
+    "partnerPayout": "Payout Status: ",
+    "status": "Status: ",
     "slogan": "Join our Partner Portal to access a diverse customer base across the globe",
     "forgotPassword": "Forgot Password",
     "signIn": "Sign In",
@@ -428,14 +443,18 @@
       "timeline": "Timeline",
       "payoutStatus": "Payout Status",
       "paymentStatus": "Payment Status",
-      "userName": "User Name"
+      "userName": "User Name",
+    "platformFee": "Platform Fee",
+    "netAmount": "Net Amount"
     }
   },
   "tag": {
     "hourRate": "{{rate}}/hr",
     "availableNow": "Available Now",
     "vettedExpert": "Vetted",
-    "draftProfile": "Draft Profile"
+    "draftProfile": "Draft Profile",
+    "scheduledInterviewSlot": "Scheduled Interview Time Slot: {{slots}}",
+    "noInterviewsScheduled": "No Interviews Scheduled"
   },
   "forgotPassword": {
     "heading": "Forgot Password",
