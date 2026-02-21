@@ -201,26 +201,27 @@ const ResourceMainEducation: React.FC<props> = ({ onSuccess }) => {
     return column;
   });
 
-  const tableRef = useRef<HTMLDivElement>(null); // Reference to the table wrapper
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        if (!tableRef.current) return;
         entries.forEach((_) => {
-          // You can handle the resize event here
-          // For example, adjust the layout or trigger a re-render
         });
       });
     });
 
     if (tableRef.current) {
-      resizeObserver.observe(tableRef.current); // Observing the table container or a specific element
+      resizeObserver.observe(tableRef.current);
     }
 
     return () => {
-      resizeObserver.disconnect(); // Cleanup on unmount
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
     };
-  }, []); //
+  }, []);
 
   return (
     <Form form={form} onFinish={onSave} className="w-100">

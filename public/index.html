@@ -25,6 +25,16 @@
   <title>nuTalent</title>
   <style>
   </style>
+  <script>
+    window.addEventListener('error', function(e) {
+      if (e.message === 'ResizeObserver loop completed with undelivered notifications.' || 
+          e.message === 'ResizeObserver loop limit exceeded') {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        return false;
+      }
+    });
+  </script>
 </head>
 
 <body style="height: 100%;" >

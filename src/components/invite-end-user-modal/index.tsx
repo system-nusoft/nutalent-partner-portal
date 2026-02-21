@@ -58,6 +58,22 @@ const InviteEndUserModal = forwardRef(({ page, search }: props, ref: any) => {
     >
       <Form form={form} name="inviteEndUser">
         <ChaiInput
+          name="firstName"
+          label={t("input.firstName")}
+          placeholder={t("placeholder.name")}
+          rules={[
+            { message: t("error.firstNameRequired"), required: true },
+          ]}
+        />
+        <ChaiInput
+          name="lastName"
+          label={t("input.lastName")}
+          placeholder={t("placeholder.lastName")}
+          rules={[
+            { message: t("error.lastNameRequired"), required: true },
+          ]}
+        />
+        <ChaiInput
           name="email"
           label={t("input.endUserEmail")}
           placeholder={t("placeholder.email")}
