@@ -43,7 +43,11 @@
     "cannotAccessTimeesheet": "Cannot access Timeesheet",
     "rateCannotBeZero": "Hourly Rate cannot be zero",
     "passwordMismatch": "Provided passwords are not same.",
-    "passwordInvalid": "Password is invalid"
+    "passwordInvalid": "Password is invalid",
+    "noWorkNotesAvailable": "Please add work notes before generating summary",
+    "summaryGenerationFailed": "Failed to generate AI summary. Please try again.",
+    "dateRangeRequired": "Date range is required for generating summary",
+    "configurationError": "Configuration error. Please contact support."
   },
   "common": {
     "currency": "$",
@@ -97,7 +101,8 @@
     "rejecting": "Rejecting...",
     "acceptInvoice": "Accept Invoice",
     "processing": "Processing...",
-    "payPartnerShare": "Pay Partner Share"
+    "payPartnerShare": "Pay Partner Share",
+    "generateAISummary": "Generate AI Summary"
   },
   "heading": {
     "linkExpired": "Your Link has Expired",
@@ -207,7 +212,8 @@
     "hourlyRateColon": "Hourly Rate:",
     "revisionColon": "Revision:",
     "revisionComments": "Revision Comments",
-    "upcomingInterviews": "Upcoming Interviews"
+    "upcomingInterviews": "Upcoming Interviews",
+    "taskSummary": "Task Summary"
   },
   "auth": {
     "slogan": "Join our Partner Portal to access a diverse customer base across the globe"
@@ -311,7 +317,8 @@
     "typeMessageHere": "Type Message Here...",
     "enterWebsite": "Enter Website",
     "notFoundInquiries": "Feel Free To Send Any Specific Inquiries.",
-    "poweredByAI": "Powered By AI"
+    "poweredByAI": "Powered By AI",
+    "taskSummary": "Enter a comprehensive summary of all tasks completed during this period..."
   },
   "resourceDetails": {
     "heading": "Resource Details"
@@ -355,7 +362,8 @@
     "passwordDoNotMatch": "Passwords don't match",
     "fillRequiredFields": "Please fill required fields",
     "timeSlotsRequired": "Time slots are required",
-    "rangeError": "The selected range cannot exceed 15 days"
+    "rangeError": "The selected range cannot exceed 15 days",
+    "summaryGenerated": "AI summary generated successfully"
   },
   "modal": {
     "restrictHeading": "Are you sure you want to restrict this Resource?",
