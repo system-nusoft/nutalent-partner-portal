@@ -166,9 +166,9 @@ export const AddTimesheet: React.FC = () => {
                   totalHours: number;
                   totalAmount: number;
                 }) => {
-                  form.setFieldValue("notes", notes);
-                  if (taskSummary) {
-                    setTaskSummary(taskSummary);
+                  form.setFieldValue("notes", notes ?? "");
+                  if (typeof taskSummary === 'string' && taskSummary.trim().length > 0) {
+                    setTaskSummary(taskSummary.trim());
                   }
                   details?.map(({ hours, amount, workNotes }, index) => {
                     form.setFieldsValue({

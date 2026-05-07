@@ -828,7 +828,15 @@ export class AppService extends HttpService {
   };
   postGenerateTaskSummary = async (
     baseAuthUrl: string,
-    data: any
+    data: {
+      workNotes: Array<{
+        date: string;
+        workNotes: string;
+        hours: number;
+      }>;
+      projectName: string;
+      timesheetPeriod: string;
+    }
   ): Promise<any> => {
     try {
       const apiResponse = await this.post(
