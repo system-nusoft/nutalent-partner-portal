@@ -14,6 +14,7 @@ import {
   getTimesheetLoading,
 } from "src/store/selectors/features/timesheet-selector";
 import RequestAppAction from "src/store/slices/app-actions";
+import { AppService } from "src/services/app";
 import { dateFormat } from "src/utils/functions";
 import ChaiInput from "../../components/input";
 import styles from "./styles.module.scss";
@@ -35,6 +36,8 @@ export const AddTimesheet: React.FC = () => {
   const id = match ? match[1] : null;
   const modalRef = useRef<any>(null);
   const [fixedAmount, setFixedAmount] = useState(false);
+  const [taskSummary, setTaskSummary] = useState("");
+  const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
   const status = timesheetData?.status;
   const disable =
     status === TIMESHEET_STATUS.DRAFT || status === TIMESHEET_STATUS.REVISION
@@ -155,13 +158,18 @@ export const AddTimesheet: React.FC = () => {
                 ({
                   details,
                   notes,
+                  taskSummary,
                 }: {
                   details: any[];
                   notes: string;
+                  taskSummary?: string;
                   totalHours: number;
                   totalAmount: number;
                 }) => {
-                  form.setFieldValue("notes", notes);
+                  form.setFieldValue("notes", notes ?? "");
+                  if (typeof taskSummary === 'string' && taskSummary.trim().length > 0) {
+                    setTaskSummary(taskSummary.trim());
+                  }
                   details?.map(({ hours, amount, workNotes }, index) => {
                     form.setFieldsValue({
                       [`amount_${index}`]: amount,
@@ -192,29 +200,104 @@ export const AddTimesheet: React.FC = () => {
     setFixedAmount(value);
   };
 
-  const onAddRevision = (requestRevision?: boolean) => {
-    const notes = form.getFieldValue("notes");
-    const totalAmount = form.getFieldValue("totalAmount");
+  const onGenerateTaskSummary = async (): Promise<void> => {
+    setIsGeneratingSummary(true);
+    
+    if (!startDate || !endDate) {
+      Notification({
+        message: t("error.dateRangeRequired"),
+        type: "error",
+      });
+      setIsGeneratingSummary(false);
+      return;
+    }
+
+    const workNotes = arr
+      .map((_, index) => ({
+        date: dayjs(arr[index].date).format("YYYY-MM-DD"),
+        workNotes: form.getFieldValue(`workNotes_${index}`) || "",
+        hours: Number(form.getFieldValue(`hours_${index}`)) || 0,
+      }))
+      .filter((item) => item.workNotes?.trim()?.length > 0);
+
+    if (workNotes.length === 0) {
+      Notification({
+        message: t("error.noWorkNotesAvailable"),
+        type: "error",
+      });
+      setIsGeneratingSummary(false);
+      return;
+    }
+
+    const baseUrl: string | undefined = process.env.REACT_APP_BASE_URL;
+    if (!baseUrl) {
+      Notification({
+        message: t("error.configurationError"),
+        type: "error",
+      });
+      setIsGeneratingSummary(false);
+      return;
+    }
+
+    const projectName = timesheetData?.Engagement?.Project?.name ?? "Project";
+    const timesheetPeriod = `${dateFormat(startDate)} - ${dateFormat(endDate)}`;
+
+    try {
+      const appService = new AppService();
+      const response = await appService.postGenerateTaskSummary(baseUrl, {
+        workNotes,
+        projectName,
+        timesheetPeriod,
+      });
+
+      const generatedSummary = response.data?.taskSummary ?? "";
+      setTaskSummary(generatedSummary);
+      form.setFieldValue("taskSummary", generatedSummary);
+      Notification({
+        message: t("notification.summaryGenerated"),
+        type: "success",
+      });
+    } catch (error: unknown) {
+      console.error("AI Summary Generation Error:", error);
+      const errorMessage = (error as any)?.data?.message || t("error.summaryGenerationFailed");
+      Notification({
+        message: errorMessage,
+        type: "error",
+      });
+    } finally {
+      setIsGeneratingSummary(false);
+    }
+  };
+
+  const onAddRevision = (requestRevision?: boolean): void => {
+    const notes = form.getFieldValue("notes") ?? "";
+    const totalAmount = form.getFieldValue("totalAmount") ?? 0;
+    
     const reqData: {
       details: {
-        date: any;
+        date: string;
         hours: number;
         workNotes: string;
       }[];
-      notes: any;
-      totalAmount: any;
+      notes: string;
+      totalAmount: number;
+      taskSummary?: string;
       fixedAmount?: boolean;
       status?: TIMESHEET_STATUS;
     } = {
       details: arr?.map((i, index) => ({
         date: dayjs(i.date).format("YYYY-MM-DD"),
-        hours: form.getFieldValue(`hours_${index}`),
-        workNotes: form.getFieldValue(`workNotes_${index}`),
-      })),
+        hours: Number(form.getFieldValue(`hours_${index}`)) || 0,
+        workNotes: form.getFieldValue(`workNotes_${index}`) ?? "",
+      })) ?? [],
       notes: notes,
       status: TIMESHEET_STATUS.DRAFT,
-      totalAmount: parseInt(totalAmount),
+      totalAmount: Number(totalAmount) || 0,
     };
+
+    if (taskSummary?.trim()?.length > 0) {
+      reqData.taskSummary = taskSummary.trim();
+    }
 
     if (requestRevision) {
       reqData["status"] = TIMESHEET_STATUS.PENDING_APPROVAL;
@@ -358,6 +441,36 @@ export const AddTimesheet: React.FC = () => {
                     rows={4}
                     label={t("heading.noteFrom", { name: "Ethan" })}
                   />
+                </div>
+              </div>
+              <div className={`d-flex rounded-2 bg-white w-100 ${styles.card}`}>
+                <div className="w-100 h-100 d-flex flex-column p-2">
+                  <div className="d-flex justify-content-between align-items-center mb-2">
+                    <ChaiiText className="fw-bold">
+                      {t("heading.taskSummary")}
+                    </ChaiiText>
+                    {!disable && !taskSummary && (
+                      <Button
+                        btnType="button"
+                        btnClass="actionBtn"
+                        onClick={onGenerateTaskSummary}
+                        label={t("button.generateAISummary")}
+                        disabled={isGeneratingSummary}
+                      />
+                    )}
+                  </div>
+                  {taskSummary?.trim()?.length > 0 && (
+                    <ChaiInput
+                      name="taskSummary"
+                      height="small"
+                      initialValue={taskSummary}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTaskSummary(e.target.value)}
+                      disable={disable}
+                      inputType="textArea"
+                      rows={4}
+                      placeholder={t("placeholder.taskSummary")}
+                    />
+                  )}
                 </div>
               </div>
               {Array.isArray(timesheetData?.TimesheetRevision) &&

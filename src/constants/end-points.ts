@@ -58,6 +58,7 @@ const ENDPOINTS = {
   ALL_ENGAGEMENTS: () => `engagement`,
   PATCH_ENGAGEMENTS: (id: string) => `engagement/${id}/status`,
   INVITE_END_USER: `end-user/invite`,
+  GENERATE_TASK_SUMMARY: `ai/generate-task-summary`,
 };
 
 export default ENDPOINTS;
