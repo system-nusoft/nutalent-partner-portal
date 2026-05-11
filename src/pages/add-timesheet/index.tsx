@@ -28,6 +28,7 @@ export const AddTimesheet: React.FC = () => {
   const endDate = location?.state?.endDate; // end to Date
   const totalDays = dayjs(endDate).add(1, "day").diff(startDate, "day"); // difference between start and end date
   const [form] = useForm();
+  const [workNotesVersion, setWorkNotesVersion] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const timesheetData: any = useSelector(getTimesheetData);
   const onPostLoading = useSelector(getTimesheetLoading);
@@ -128,6 +129,7 @@ export const AddTimesheet: React.FC = () => {
                 i.workNotes = e.target.value;
               }
             });
+            setWorkNotesVersion((n) => n + 1);
           }}
           name={`workNotes_${obj?.id}`}
           initialValue={val}
@@ -447,9 +449,9 @@ export const AddTimesheet: React.FC = () => {
                 <div className="w-100 h-100 d-flex flex-column p-2">
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <ChaiiText className="fw-bold">
-                      {t("heading.taskSummary")}
+                      {t("heading.taskOverview")}
                     </ChaiiText>
-                    {!disable && !taskSummary && (
+                    {!disable && !taskSummary && workNotesVersion >= 0 && arr.some((_, index) => (form.getFieldValue(`workNotes_${index}`) ?? "").trim().length > 0) && (
                       <Button
                         btnType="button"
                         btnClass="actionBtn"
