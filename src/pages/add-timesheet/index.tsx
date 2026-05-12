@@ -451,7 +451,7 @@ export const AddTimesheet: React.FC = () => {
                     <ChaiiText className="fw-bold">
                       {t("heading.taskOverview")}
                     </ChaiiText>
-                    {!disable && !taskSummary && workNotesVersion >= 0 && arr.some((_, index) => (form.getFieldValue(`workNotes_${index}`) ?? "").trim().length > 0) && (
+                    {!disable && !taskSummary && workNotesVersion >= 0 && arr.some((_, index) => (form.getFieldValue(`workNotes_${index}`) ?? "")?.trim().length > 0) && (
                       <Button
                         btnType="button"
                         btnClass="actionBtn"
