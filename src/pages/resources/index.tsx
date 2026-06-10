@@ -5,9 +5,9 @@ import { Button, Modal, SimpleTable, StatusTag } from "nusoft_components";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { generatePath, useLocation, useNavigate } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import { EditPen, Warning } from "src/assets/svg";
-import { ROLES, STATUS } from "src/constants/roles";
+import { STATUS } from "src/constants/roles";
 import { PrivateRoutes } from "src/constants/routes-types";
 import { deleteResourceLoading } from "src/store/selectors/features/delete-resource";
 import { getResourceByIdLoading } from "src/store/selectors/features/get-resource-by-id";
@@ -53,7 +53,6 @@ export const Resources: React.FC = () => {
   const [isEditValues, setIsEditValues] = useState<any>(null);
   const [onlyDraftProfiles, setOnlyDraftProfiles] = useState(false);
   const isDeleteing = useSelector(deleteResourceLoading);
-  const location = useLocation();
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const deleteModalRef = useRef<any>(null);
   const isPartner = user?.partnerId;
@@ -323,8 +322,8 @@ export const Resources: React.FC = () => {
     if (onlyDraftProfiles) {
       query["onlyDraftProfiles"] = onlyDraftProfiles;
     }
-    if (user.partnerId) {
-      query["partnerId"] = user.partnerId;
+    if (user?.partnerId) {
+      query["partnerId"] = user?.partnerId;
     }
     dispatch(
       RequestAppAction.handleGetResources({
@@ -357,7 +356,7 @@ export const Resources: React.FC = () => {
 
     if (e?.length > 0) query["search"] = e;
 
-    if (user.partnerId) {
+    if (user?.partnerId) {
       query["partnerId"] = user.partnerId;
     }
     dispatch(
@@ -417,7 +416,7 @@ export const Resources: React.FC = () => {
       query["onlyDraftProfiles"] = onlyDraftProfiles;
     }
 
-    if (user.partnerId) {
+    if (user?.partnerId) {
       query["partnerId"] = user.partnerId;
     }
 
@@ -446,7 +445,7 @@ export const Resources: React.FC = () => {
       query["search"] = search;
     }
 
-    if (user.partnerId) {
+    if (user?.partnerId) {
       query["partnerId"] = user.partnerId;
     }
 
@@ -460,11 +459,14 @@ export const Resources: React.FC = () => {
     );
   };
 
+  const hasFetched = useRef(false);
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    fetchResources();
-  }, []);
-
-  useEffect(() => {}, []);
+    if (user && !hasFetched.current) {
+      hasFetched.current = true;
+      fetchResources();
+    }
+  }, [user]);
 
   return (
     <Spin spinning={isLoading || isFetchingResource || isDeleteing}>
